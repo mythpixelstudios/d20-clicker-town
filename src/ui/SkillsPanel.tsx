@@ -115,53 +115,32 @@ function SkillButton({ skillKey, skillValue, canUpgrade, onUpgrade }: SkillButto
   const skillInfo = skillDescriptions[skillKey]
 
   return (
-    <div 
-      style={{ 
-        position: 'relative',
-        display: 'flex',
-        alignItems: 'center',
-        justifyContent: 'space-between',
-        padding: '8px 12px',
-        background: 'rgba(0,0,0,0.2)',
-        borderRadius: 8,
-        border: '1px solid rgba(255,255,255,0.1)',
-        transition: 'all 0.2s'
-      }}
+    <div
+      className="relative flex items-center justify-between px-3 py-2 bg-black/20 rounded-lg border border-white/10 transition-all hover:bg-black/30"
       onMouseEnter={() => setShowTooltip(true)}
       onMouseLeave={() => setShowTooltip(false)}
     >
-      <div style={{ flex: 1 }}>
-        <div style={{ 
-          fontSize: 14, 
-          fontWeight: 'bold',
-          color: 'var(--text)',
-          marginBottom: 2
-        }}>
+      <div className="flex-1">
+        <div className="text-sm font-bold text-text mb-0.5">
           {skillInfo.name}
         </div>
-        <div style={{ fontSize: 11, color: 'var(--muted)' }}>
+        <div className="text-[11px] text-muted">
           Rank {skillValue}
         </div>
       </div>
-      
-      <button 
-        disabled={!canUpgrade} 
+
+      <button
+        disabled={!canUpgrade}
         onClick={() => onUpgrade(skillKey)}
-        style={{
-          width: 32,
-          height: 32,
-          fontSize: 18,
-          fontWeight: 'bold',
-          borderRadius: 6
-        }}
+        className="w-8 h-8 text-lg font-bold rounded-md"
       >
         +
       </button>
-      
+
       {showTooltip && (
-        <div className="tooltip" style={{ width: 280, left: '50%', transform: 'translateX(-50%)' }}>
-          <div style={{ fontWeight: 'bold', marginBottom: 4 }}>{skillInfo.name}</div>
-          <div style={{ fontSize: 12 }}>{skillInfo.description}</div>
+        <div className="absolute bottom-full left-1/2 -translate-x-1/2 mb-2 w-70 bg-panel border border-white/20 rounded-lg p-3 shadow-[0_4px_12px_rgba(0,0,0,0.5)] z-50 pointer-events-none animate-tooltip-fade-in">
+          <div className="font-bold mb-1">{skillInfo.name}</div>
+          <div className="text-xs text-muted">{skillInfo.description}</div>
         </div>
       )}
     </div>
@@ -173,51 +152,29 @@ export default function SkillsPanel() {
   const canUpgrade = skillPoints > 0
 
   return (
-    <div className="card" style={{ height: '100%', overflow: 'auto' }}>
-      <div style={{ 
-        display: 'flex', 
-        justifyContent: 'space-between', 
-        alignItems: 'center',
-        marginBottom: 16,
-        padding: '12px',
-        background: 'rgba(99,102,241,0.1)',
-        border: '1px solid rgba(99,102,241,0.3)',
-        borderRadius: 8
-      }}>
+    <div className="bg-panel border border-white/[0.06] rounded-xl p-4 shadow-card h-full overflow-auto">
+      <div className="flex justify-between items-center mb-4 p-3 bg-indigo-500/10 border border-indigo-500/30 rounded-lg">
         <div>
-          <div style={{ fontSize: 18, fontWeight: 'bold' }}>Combat Skills</div>
-          <div style={{ fontSize: 12, color: 'var(--muted)', marginTop: 2 }}>
+          <div className="text-lg font-bold">Combat Skills</div>
+          <div className="text-xs text-muted mt-0.5">
             Specialize your character's abilities
           </div>
         </div>
-        <div style={{ 
-          fontSize: 24, 
-          fontWeight: 'bold', 
-          color: skillPoints > 0 ? 'var(--gold)' : 'var(--muted)'
-        }}>
-          {skillPoints} <span style={{ fontSize: 14 }}>points</span>
+        <div className={`text-2xl font-bold ${skillPoints > 0 ? 'text-gold' : 'text-muted'}`}>
+          {skillPoints} <span className="text-sm">points</span>
         </div>
       </div>
 
       {categories.map(category => {
         const categorySkills = (Object.keys(skillDescriptions) as SkillKey[])
           .filter(key => skillDescriptions[key].category === category)
-        
+
         return (
-          <div key={category} style={{ marginBottom: 24 }}>
-            <div style={{ 
-              fontSize: 13,
-              fontWeight: 'bold',
-              color: 'var(--gold)',
-              textTransform: 'uppercase',
-              letterSpacing: '0.5px',
-              marginBottom: 8,
-              padding: '4px 0',
-              borderBottom: '1px solid rgba(255,255,255,0.1)'
-            }}>
+          <div key={category} className="mb-6">
+            <div className="text-[13px] font-bold text-gold uppercase tracking-wide mb-2 py-1 border-b border-white/10">
               {category}
             </div>
-            <div style={{ display: 'flex', flexDirection: 'column', gap: 8 }}>
+            <div className="flex flex-col gap-2">
               {categorySkills.map(skillKey => (
                 <SkillButton
                   key={skillKey}
@@ -233,15 +190,7 @@ export default function SkillsPanel() {
       })}
 
       {skillPoints === 0 && (
-        <div style={{
-          textAlign: 'center',
-          padding: 16,
-          background: 'rgba(0,0,0,0.2)',
-          borderRadius: 8,
-          marginTop: 16,
-          color: 'var(--muted)',
-          fontSize: 13
-        }}>
+        <div className="text-center p-4 bg-black/20 rounded-lg mt-4 text-muted text-[13px]">
           💡 Gain skill points by leveling up (1 point every 2 levels)
         </div>
       )}

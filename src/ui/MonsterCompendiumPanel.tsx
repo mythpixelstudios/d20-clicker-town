@@ -57,89 +57,88 @@ export default function MonsterCompendiumPanel() {
   }
 
   return (
-    <div className="monster-compendium-panel">
-      <div className="compendium-header">
-        <h2>Monster Compendium</h2>
-        <div className="compendium-stats">
-          <div className="compendium-stat-item">
-            <span className="compendium-stat-label">Discovery:</span>
-            <span className="compendium-stat-value">{overallDiscovery.toFixed(1)}%</span>
+    <div className="space-y-4">
+      <div>
+        <h2 className="text-xl font-bold text-text mb-3">Monster Compendium</h2>
+        <div className="flex flex-wrap gap-3">
+          <div className="flex-1 min-w-[120px] bg-panel border border-white/10 rounded-lg p-3 text-center">
+            <span className="text-xs text-muted block mb-1">Discovery:</span>
+            <span className="text-lg font-bold text-gold">{overallDiscovery.toFixed(1)}%</span>
           </div>
-          <div className="compendium-stat-item">
-            <span className="compendium-stat-label">Encountered:</span>
-            <span className="compendium-stat-value">{totalMonstersEncountered.toLocaleString()}</span>
+          <div className="flex-1 min-w-[120px] bg-panel border border-white/10 rounded-lg p-3 text-center">
+            <span className="text-xs text-muted block mb-1">Encountered:</span>
+            <span className="text-lg font-bold text-text">{totalMonstersEncountered.toLocaleString()}</span>
           </div>
-          <div className="compendium-stat-item">
-            <span className="compendium-stat-label">Defeated:</span>
-            <span className="compendium-stat-value">{totalMonstersKilled.toLocaleString()}</span>
+          <div className="flex-1 min-w-[120px] bg-panel border border-white/10 rounded-lg p-3 text-center">
+            <span className="text-xs text-muted block mb-1">Defeated:</span>
+            <span className="text-lg font-bold text-green-400">{totalMonstersKilled.toLocaleString()}</span>
           </div>
-          <div className="compendium-stat-item">
-            <span className="compendium-stat-label">Unique Species:</span>
-            <span className="compendium-stat-value">{Object.keys(discoveredMonsters).length}</span>
+          <div className="flex-1 min-w-[120px] bg-panel border border-white/10 rounded-lg p-3 text-center">
+            <span className="text-xs text-muted block mb-1">Unique Species:</span>
+            <span className="text-lg font-bold text-purple">{Object.keys(discoveredMonsters).length}</span>
           </div>
         </div>
       </div>
 
-      <div className="compendium-description">
-        <p>
-          Track your encounters with the various creatures of the realm. 
+      <div className="bg-blue-500/10 border border-blue-500/20 rounded-lg p-3">
+        <p className="text-sm text-muted m-0">
+          Track your encounters with the various creatures of the realm.
           Discovering new species and affix variants contributes to your understanding of the world.
         </p>
       </div>
 
-      <div className="compendium-bonuses">
-        <h3>📊 Active Compendium Bonuses</h3>
-        <div className="bonuses-grid">
-          <div className="bonus-item">
-            <span className="bonus-icon">⚔️</span>
-            <span className="bonus-label">Damage:</span>
-            <span className="bonus-value">+{compendiumBonuses.damageBonus.toFixed(1)}%</span>
+      <div className="bg-panel border border-white/10 rounded-lg p-4">
+        <h3 className="text-base font-bold text-gold mb-3 m-0">📊 Active Compendium Bonuses</h3>
+        <div className="flex flex-wrap gap-3 mb-3">
+          <div className="flex-1 min-w-[100px] text-center">
+            <span className="text-2xl block mb-1">⚔️</span>
+            <span className="text-xs text-muted block">Damage:</span>
+            <span className="text-sm font-bold text-green-400">+{compendiumBonuses.damageBonus.toFixed(1)}%</span>
           </div>
-          <div className="bonus-item">
-            <span className="bonus-icon">💰</span>
-            <span className="bonus-label">Gold:</span>
-            <span className="bonus-value">+{compendiumBonuses.goldBonus.toFixed(1)}%</span>
+          <div className="flex-1 min-w-[100px] text-center">
+            <span className="text-2xl block mb-1">💰</span>
+            <span className="text-xs text-muted block">Gold:</span>
+            <span className="text-sm font-bold text-gold">+{compendiumBonuses.goldBonus.toFixed(1)}%</span>
           </div>
-          <div className="bonus-item">
-            <span className="bonus-icon">⭐</span>
-            <span className="bonus-label">XP:</span>
-            <span className="bonus-value">+{compendiumBonuses.xpBonus.toFixed(1)}%</span>
+          <div className="flex-1 min-w-[100px] text-center">
+            <span className="text-2xl block mb-1">⭐</span>
+            <span className="text-xs text-muted block">XP:</span>
+            <span className="text-sm font-bold text-blue-400">+{compendiumBonuses.xpBonus.toFixed(1)}%</span>
           </div>
-          <div className="bonus-item">
-            <span className="bonus-icon">💥</span>
-            <span className="bonus-label">Crit Chance:</span>
-            <span className="bonus-value">+{compendiumBonuses.critChanceBonus.toFixed(1)}%</span>
+          <div className="flex-1 min-w-[100px] text-center">
+            <span className="text-2xl block mb-1">💥</span>
+            <span className="text-xs text-muted block">Crit Chance:</span>
+            <span className="text-sm font-bold text-orange-400">+{compendiumBonuses.critChanceBonus.toFixed(1)}%</span>
           </div>
         </div>
-        <div className="bonuses-info">
-          <small>
-            💡 Bonuses increase as you discover more monsters! +1% damage per 10% completion.
-            Kill milestones: 1,000 (+2% damage), 5,000 (+3% damage), 10,000 (+5% damage).
-          </small>
+        <div className="text-xs text-muted">
+          💡 Bonuses increase as you discover more monsters! +1% damage per 10% completion.
+          Kill milestones: 1,000 (+2% damage), 5,000 (+3% damage), 10,000 (+5% damage).
         </div>
       </div>
 
       {recentDiscoveries.length > 0 && (
-        <div className="recent-discoveries">
-          <h3>🔍 Recent Discoveries</h3>
-          <div className="discoveries-list">
+        <div className="bg-panel border border-white/10 rounded-lg p-4">
+          <h3 className="text-base font-bold text-text mb-3 m-0">🔍 Recent Discoveries</h3>
+          <div className="space-y-2">
             {recentDiscoveries.map(monster => (
-              <div key={monster.monsterId} className="discovery-item">
-                <span className="discovery-name">{monster.name}</span>
-                <span className="discovery-zone">Zone {monster.zone}</span>
-                <span className="discovery-date">{formatDate(monster.firstEncountered)}</span>
+              <div key={monster.monsterId} className="flex justify-between items-center text-sm bg-black/20 rounded px-3 py-2">
+                <span className="text-text font-bold">{monster.name}</span>
+                <span className="text-muted">Zone {monster.zone}</span>
+                <span className="text-xs text-muted">{formatDate(monster.firstEncountered)}</span>
               </div>
             ))}
           </div>
         </div>
       )}
 
-      <div className="compendium-filters">
-        <div className="filter-group">
-          <label htmlFor="zone-filter">Zone Filter:</label>
-          <select 
+      <div className="flex gap-3">
+        <div className="flex-1">
+          <label htmlFor="zone-filter" className="text-xs text-muted block mb-1">Zone Filter:</label>
+          <select
             id="zone-filter"
-            value={selectedZone || ''} 
+            className="w-full bg-panel border border-white/20 rounded px-3 py-2 text-text text-sm"
+            value={selectedZone || ''}
             onChange={(e) => setSelectedZone(e.target.value ? Number(e.target.value) : null)}
           >
             <option value="">All Zones</option>
@@ -151,9 +150,14 @@ export default function MonsterCompendiumPanel() {
           </select>
         </div>
 
-        <div className="filter-group">
-          <label htmlFor="sort-filter">Sort By:</label>
-          <select id="sort-filter" value={sortBy} onChange={(e) => setSortBy(e.target.value as any)}>
+        <div className="flex-1">
+          <label htmlFor="sort-filter" className="text-xs text-muted block mb-1">Sort By:</label>
+          <select
+            id="sort-filter"
+            className="w-full bg-panel border border-white/20 rounded px-3 py-2 text-text text-sm"
+            value={sortBy}
+            onChange={(e) => setSortBy(e.target.value as any)}
+          >
             <option value="recent">Recently Encountered</option>
             <option value="name">Name</option>
             <option value="encounters">Encounter Count</option>
@@ -162,11 +166,11 @@ export default function MonsterCompendiumPanel() {
         </div>
       </div>
 
-      <div className="monsters-grid">
+      <div className="flex flex-wrap gap-3">
         {filteredMonsters.length === 0 ? (
-          <div className="no-monsters">
-            <p>
-              {selectedZone 
+          <div className="w-full text-center py-8">
+            <p className="text-muted">
+              {selectedZone
                 ? `No monsters discovered in Zone ${selectedZone} yet.`
                 : 'No monsters discovered yet. Start your adventure to begin cataloging creatures!'
               }
@@ -174,44 +178,44 @@ export default function MonsterCompendiumPanel() {
           </div>
         ) : (
           filteredMonsters.map(monster => (
-            <div key={monster.monsterId} className="monster-card">
-              <div className="monster-header">
-                <h3>{monster.name}</h3>
-                <div className="monster-zone">Zone {monster.zone}</div>
+            <div key={monster.monsterId} className="flex-1 min-w-[280px] max-w-[400px] bg-panel border border-white/10 rounded-lg p-3">
+              <div className="flex justify-between items-start mb-2">
+                <h3 className="text-base font-bold text-text m-0">{monster.name}</h3>
+                <div className="text-xs text-muted bg-black/30 px-2 py-0.5 rounded">Zone {monster.zone}</div>
               </div>
-              
-              <div className="monster-stats">
-                <div className="stat-row">
-                  <span className="stat-label">Encounters:</span>
-                  <span className="stat-value">{monster.timesEncountered}</span>
+
+              <div className="space-y-1 mb-3">
+                <div className="flex justify-between text-xs">
+                  <span className="text-muted">Encounters:</span>
+                  <span className="text-text font-bold">{monster.timesEncountered}</span>
                 </div>
-                <div className="stat-row">
-                  <span className="stat-label">Defeats:</span>
-                  <span className="stat-value">{monster.timesKilled}</span>
+                <div className="flex justify-between text-xs">
+                  <span className="text-muted">Defeats:</span>
+                  <span className="text-green-400 font-bold">{monster.timesKilled}</span>
                 </div>
-                <div className="stat-row">
-                  <span className="stat-label">Success Rate:</span>
-                  <span className="stat-value">
-                    {monster.timesEncountered > 0 
+                <div className="flex justify-between text-xs">
+                  <span className="text-muted">Success Rate:</span>
+                  <span className="text-blue-400 font-bold">
+                    {monster.timesEncountered > 0
                       ? `${((monster.timesKilled / monster.timesEncountered) * 100).toFixed(1)}%`
                       : '0%'
                     }
                   </span>
                 </div>
-                <div className="stat-row">
-                  <span className="stat-label">Affix Variants:</span>
-                  <span className="stat-value">{formatAffixVariants(monster.affixVariants)}</span>
+                <div className="flex justify-between text-xs">
+                  <span className="text-muted">Affix Variants:</span>
+                  <span className="text-purple font-bold">{formatAffixVariants(monster.affixVariants)}</span>
                 </div>
               </div>
-              
-              <div className="monster-dates">
-                <div className="date-item">
-                  <span className="date-label">First Seen:</span>
-                  <span className="date-value">{formatDate(monster.firstEncountered)}</span>
+
+              <div className="pt-2 border-t border-white/10 space-y-1">
+                <div className="flex justify-between text-[10px]">
+                  <span className="text-muted">First Seen:</span>
+                  <span className="text-text">{formatDate(monster.firstEncountered)}</span>
                 </div>
-                <div className="date-item">
-                  <span className="date-label">Last Seen:</span>
-                  <span className="date-value">{formatDate(monster.lastEncountered)}</span>
+                <div className="flex justify-between text-[10px]">
+                  <span className="text-muted">Last Seen:</span>
+                  <span className="text-text">{formatDate(monster.lastEncountered)}</span>
                 </div>
               </div>
             </div>

@@ -42,8 +42,8 @@ function EquipmentCard({ item, onShowTooltip, onBreakdown, onShowComparison }: E
   } : {}
 
   return (
-    <div 
-      className={`equipment-card rarity-${item.equipment.rarity}`}
+    <div
+      className="relative bg-black/30 border-2 rounded-lg p-2 cursor-pointer transition-all hover:scale-105 hover:bg-black/40"
       onClick={handleClick}
       onContextMenu={handleRightClick}
       role="button"
@@ -61,29 +61,29 @@ function EquipmentCard({ item, onShowTooltip, onBreakdown, onShowComparison }: E
         ...glowStyle
       }}
     >
-      <div 
-        className="equipment-rarity-bar"
+      <div
+        className="absolute left-0 top-0 bottom-0 w-1 rounded-l-lg"
         style={{ backgroundColor: rarityColor }}
       />
-      <div className="equipment-info">
-        <div className="equipment-name" title={item.equipment.name}>
+      <div className="pl-1">
+        <div className="text-sm font-bold text-text truncate mb-0.5" title={item.equipment.name}>
           <span aria-hidden="true">{rarityIcon}</span> {item.equipment.name}
         </div>
-        <div className="equipment-meta">
-          <span className="equipment-level">Lv {item.equipment.level}</span>
-          <span 
-            className="equipment-rarity-text"
+        <div className="flex justify-between items-center text-xs mb-1">
+          <span className="text-muted">Lv {item.equipment.level}</span>
+          <span
+            className="font-bold"
             style={{ color: rarityColor }}
           >
             {item.equipment.rarity}
           </span>
         </div>
-        <div className="equipment-slot-type">
+        <div className="text-[10px] text-muted uppercase">
           {item.equipment.slot}
         </div>
       </div>
-      <button 
-        className="equipment-breakdown-btn"
+      <button
+        className="absolute top-1 right-1 w-5 h-5 bg-red-500/80 hover:bg-red-500 text-white rounded flex items-center justify-center text-sm font-bold transition-colors"
         onClick={handleBreakdown}
         title="Breakdown item for materials"
         aria-label={`Breakdown ${item.equipment.name} for materials`}
@@ -100,10 +100,10 @@ type MaterialCardProps = {
 
 function MaterialCard({ item }: MaterialCardProps) {
   return (
-    <div className="material-card">
-      <div className="material-name">{item.label}</div>
+    <div className="relative bg-purple/10 border border-purple/30 rounded-lg p-2 text-center">
+      <div className="text-xs font-medium text-purple">{item.label}</div>
       {item.qty && item.qty > 1 && (
-        <div className="material-quantity">x{item.qty}</div>
+        <div className="absolute top-1 right-1 bg-purple/80 text-white text-[9px] font-bold px-1 rounded">x{item.qty}</div>
       )}
     </div>
   )
@@ -175,28 +175,29 @@ export const InventoryPanel = () => {
 
   return (
     <>
-      <div className="card">
-        <div className="inventory-header">
-          <b>Inventory</b>
-          <div className="muted inventory-count">{inventory.length} items</div>
+      <div className="bg-panel border border-white/[0.06] rounded-xl p-4 shadow-card">
+        <div className="flex justify-between items-center mb-4">
+          <b className="text-text">Inventory</b>
+          <div className="text-muted text-sm">{inventory.length} items</div>
         </div>
 
         {/* Equipment Section */}
         {equipment.length > 0 && (
-          <div className="inventory-section">
-            <div className="section-header">
-              <span className="section-title">Equipment ({equipment.length})</span>
-              <span className="section-hint">Click to compare • Right-click for options</span>
+          <div className="mb-4">
+            <div className="flex justify-between items-center mb-2">
+              <span className="text-sm font-bold text-gold">Equipment ({equipment.length})</span>
+              <span className="text-[10px] text-muted">Click to compare • Right-click for options</span>
             </div>
-            <div className="equipment-grid">
+            <div className="flex flex-wrap gap-2">
               {equipment.map((item, index) => (
-                <EquipmentCard
-                  key={item.id || `equipment-${index}`}
-                  item={item}
-                  onShowTooltip={handleShowTooltip}
-                  onBreakdown={handleQuickBreakdown}
-                  onShowComparison={handleShowComparison}
-                />
+                <div key={item.id || `equipment-${index}`} className="flex-1 min-w-[140px] max-w-[200px]">
+                  <EquipmentCard
+                    item={item}
+                    onShowTooltip={handleShowTooltip}
+                    onBreakdown={handleQuickBreakdown}
+                    onShowComparison={handleShowComparison}
+                  />
+                </div>
               ))}
             </div>
           </div>
@@ -204,16 +205,17 @@ export const InventoryPanel = () => {
 
         {/* Materials Section */}
         {materials.length > 0 && (
-          <div className="inventory-section">
-            <div className="section-header">
-              <span className="section-title">Materials ({materials.length})</span>
+          <div className="mb-4">
+            <div className="mb-2">
+              <span className="text-sm font-bold text-purple">Materials ({materials.length})</span>
             </div>
-            <div className="materials-grid">
+            <div className="flex flex-wrap gap-2">
               {materials.map((item, index) => (
-                <MaterialCard
-                  key={item.id || `material-${index}`}
-                  item={item}
-                />
+                <div key={item.id || `material-${index}`} className="flex-1 min-w-[80px] max-w-[120px]">
+                  <MaterialCard
+                    item={item}
+                  />
+                </div>
               ))}
             </div>
           </div>
@@ -221,10 +223,10 @@ export const InventoryPanel = () => {
 
         {/* Empty State */}
         {inventory.length === 0 && (
-          <div className="empty-inventory">
-            <div className="empty-icon">📦</div>
-            <div className="empty-text">Your inventory is empty</div>
-            <div className="empty-hint">Defeat monsters and craft items to fill it up!</div>
+          <div className="text-center py-8">
+            <div className="text-5xl mb-2">📦</div>
+            <div className="text-text font-bold mb-1">Your inventory is empty</div>
+            <div className="text-sm text-muted">Defeat monsters and craft items to fill it up!</div>
           </div>
         )}
       </div>
@@ -237,7 +239,7 @@ export const InventoryPanel = () => {
           onClose={handleCloseTooltip}
         />
       )}
-      
+
       {ComparisonTooltip}
     </>
   )

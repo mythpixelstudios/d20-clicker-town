@@ -35,66 +35,45 @@ function StatButton({ statKey, statValue }: StatButtonProps) {  // Removed canUp
   const modifierText = formatModifier(modifier)
 
   return (
-    <div className="stat" style={{ position: 'relative' }}>
-      <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 4 }}>
-        <div style={{ fontSize: 12, color: 'var(--muted)' }}>
+    <div className="relative">
+      <div className="flex items-center justify-center gap-1">
+        <div className="text-xs text-muted">
           {statKey.toUpperCase()}
         </div>
-        <button 
-          className="info-icon"
+        <button
+          className="bg-transparent border-none p-0 cursor-help text-[10px] text-muted opacity-70 hover:opacity-100 transition-opacity"
           onMouseEnter={() => setShowTooltip(true)}
           onMouseLeave={() => setShowTooltip(false)}
           onFocus={() => setShowTooltip(true)}
           onBlur={() => setShowTooltip(false)}
-          style={{ 
-            background: 'none',
-            border: 'none',
-            padding: 0,
-            cursor: 'help',
-            fontSize: 10,
-            color: 'var(--muted)',
-            opacity: 0.7
-          }}
           aria-label={`Info about ${statKey}`}
         >
           ℹ️
         </button>
       </div>
-      
+
       {showTooltip && (
         <div className="tooltip">
           {statDescriptions[statKey]}
         </div>
       )}
-      
-      <div style={{ 
-        display: 'flex', 
-        flexDirection: 'column', 
-        alignItems: 'center', 
-        gap: 2,
-        marginTop: 4
-      }}>
+
+      <div className="flex flex-col items-center gap-0.5 mt-1">
         {/* Main stat value with equipment bonus */}
-        <div style={{ display: 'flex', alignItems: 'baseline', gap: 3 }}>
-          <b style={{ fontSize: 18 }}>{baseStat}</b>
+        <div className="flex items-baseline gap-1">
+          <b className="text-lg">{baseStat}</b>
           {equipmentBonus > 0 && (
-            <span style={{ color: '#6fe19a', fontSize: 12, fontWeight: 'bold' }}>
+            <span className="text-[#6fe19a] text-xs font-bold">
               +{equipmentBonus}
             </span>
           )}
         </div>
-        
+
         {/* Modifier display */}
-        <div style={{ 
-          fontSize: 10, 
-          color: modifier >= 0 ? '#6fe19a' : '#ef4444',
-          fontWeight: 'bold',
-          padding: '2px 6px',
-          background: 'rgba(0,0,0,0.3)',
-          borderRadius: 3,
-          minWidth: 32,
-          textAlign: 'center'
-        }}>
+        <div
+          className="text-[10px] font-bold px-1.5 py-0.5 bg-black/30 rounded min-w-[32px] text-center"
+          style={{ color: modifier >= 0 ? '#6fe19a' : '#ef4444' }}
+        >
           {modifierText}
         </div>
       </div>
@@ -120,43 +99,30 @@ export default function PlayerCard() {
   const playerAC = calculatePlayerAC(totalStats, skillBonuses.acBonus)
 
   return (
-    <div className="card">
-      <div style={{ display: 'flex', justifyContent: 'space-between' }}>
+    <div className="bg-panel border border-white/[0.06] rounded-xl p-4 shadow-[0_6px_24px_rgba(0,0,0,0.25)]">
+      <div className="flex justify-between">
         <b>{name}</b>
-        <span className="muted">Lv {level}</span>
+        <span className="text-muted">Lv {level}</span>
       </div>
-      
-      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginTop: 4 }}>
-        <div style={{ color: 'var(--gold)', fontWeight: 'bold', fontSize: 14 }}>
+
+      <div className="flex justify-between items-center mt-1">
+        <div className="text-gold font-bold text-sm">
           💰 {gold.toLocaleString()} gold
         </div>
-        <div style={{ position: 'relative' }}>
+        <div className="relative">
           <button
-            className="info-icon"
+            className="flex items-center gap-1 bg-blue-500/20 border border-blue-500/40 px-2 py-1 rounded-md cursor-help text-text text-[13px] font-bold hover:bg-blue-500/30 transition-colors"
             onMouseEnter={() => setShowACTooltip(true)}
             onMouseLeave={() => setShowACTooltip(false)}
             onFocus={() => setShowACTooltip(true)}
             onBlur={() => setShowACTooltip(false)}
-            style={{
-              display: 'flex',
-              alignItems: 'center',
-              gap: 4,
-              background: 'rgba(99, 102, 241, 0.2)',
-              border: '1px solid rgba(99, 102, 241, 0.4)',
-              padding: '4px 8px',
-              borderRadius: 6,
-              cursor: 'help',
-              color: 'var(--text)',
-              fontSize: 13,
-              fontWeight: 'bold'
-            }}
             aria-label="Armor Class info"
           >
             <span>🛡️</span>
             <span>AC {playerAC}</span>
           </button>
           {showACTooltip && (
-            <div className="tooltip" style={{ right: 0, left: 'auto', minWidth: 220 }}>
+            <div className="tooltip right-0 left-auto min-w-[220px]">
               <strong>Armor Class (AC)</strong><br/>
               • Base: 10 + DEX modifier<br/>
               • Equipment adds AC bonus<br/>
@@ -166,73 +132,61 @@ export default function PlayerCard() {
           )}
         </div>
       </div>
-      
+
       {/* Combat Stats Breakdown */}
-      <div style={{ 
-        marginTop: 8, 
-        padding: 8, 
-        background: 'rgba(0,0,0,0.2)', 
-        borderRadius: 6,
-        fontSize: 12
-      }}>
-        <div style={{ fontWeight: 'bold', marginBottom: 6, color: 'var(--muted)' }}>
+      <div className="mt-2 p-2 bg-black/20 rounded-md text-xs">
+        <div className="font-bold mb-1.5 text-muted">
           Combat Stats
         </div>
-        <div style={{ display: 'flex', flexDirection: 'column', gap: 3 }}>
-          <div style={{ display: 'flex', justifyContent: 'space-between' }}>
+        <div className="flex flex-col gap-1">
+          <div className="flex justify-between">
             <span>Attack Bonus:</span>
-            <span style={{ color: '#6fe19a' }}>
+            <span className="text-[#6fe19a]">
               +{Math.floor(level / 4) + 1} (prof) + {calculateModifier(totalStats.str)} (STR) + {skillBonuses.attackBonus.toFixed(1)} (skills) = +{(Math.floor(level / 4) + 1 + calculateModifier(totalStats.str) + skillBonuses.attackBonus).toFixed(1)}
             </span>
           </div>
-          <div style={{ display: 'flex', justifyContent: 'space-between' }}>
+          <div className="flex justify-between">
             <span>Skill Damage:</span>
-            <span style={{ color: '#6fe19a' }}>+{skillBonuses.damageBonus.toFixed(1)}</span>
+            <span className="text-[#6fe19a]">+{skillBonuses.damageBonus.toFixed(1)}</span>
           </div>
-          <div style={{ display: 'flex', justifyContent: 'space-between' }}>
+          <div className="flex justify-between">
             <span>Skill AC:</span>
-            <span style={{ color: '#6fe19a' }}>+{skillBonuses.acBonus.toFixed(1)}</span>
+            <span className="text-[#6fe19a]">+{skillBonuses.acBonus.toFixed(1)}</span>
           </div>
         </div>
       </div>
-      
-      <div className="xpbar" style={{ marginTop: 6 }}>
-        <span style={{ width: experiencePercent + '%' }} />
+
+      <div className="w-full h-2 bg-black/30 rounded-full overflow-hidden mt-1.5">
+        <div
+          className="h-full bg-gradient-to-r from-blue-600 to-blue-500 transition-all duration-300 rounded-full"
+          style={{ width: experiencePercent + '%' }}
+        />
       </div>
-      
-      <div className="muted" style={{ marginTop: 4 }}>
+
+      <div className="text-muted mt-1 text-sm">
         {xp} / {experienceNeeded} XP — Skill points: {skillPoints}
       </div>
 
-      <div style={{ marginTop: 8, position: 'relative' }}>
-        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-          <div style={{ display: 'flex', alignItems: 'center', gap: 4 }}>
-            <span style={{ fontSize: 12, fontWeight: 'bold' }}>Crafting</span>
-            <button 
-              className="info-icon"
+      <div className="mt-2 relative">
+        <div className="flex justify-between items-center">
+          <div className="flex items-center gap-1">
+            <span className="text-xs font-bold">Crafting</span>
+            <button
+              className="bg-transparent border-none p-0 cursor-help text-[10px] text-muted opacity-70 hover:opacity-100 transition-opacity"
               onMouseEnter={() => setCraftingTooltip(true)}
               onMouseLeave={() => setCraftingTooltip(false)}
               onFocus={() => setCraftingTooltip(true)}
               onBlur={() => setCraftingTooltip(false)}
-              style={{ 
-                background: 'none',
-                border: 'none',
-                padding: 0,
-                cursor: 'help',
-                fontSize: 10,
-                color: 'var(--muted)',
-                opacity: 0.7
-              }}
               aria-label="Info about crafting skill"
             >
               ℹ️
             </button>
           </div>
-          <span className="muted" style={{ fontSize: 11 }}>Lv {craftingLevel}</span>
+          <span className="text-muted text-[11px]">Lv {craftingLevel}</span>
         </div>
-        
+
         {showCraftingTooltip && (
-          <div className="tooltip" style={{ top: '100%', left: 0, marginTop: 4 }}>
+          <div className="tooltip top-full left-0 mt-1">
             <strong>Crafting Skill</strong><br/>
             • Primary factor in crafting success (50% weight)<br/>
             • Gained through successful crafting attempts<br/>
@@ -240,46 +194,61 @@ export default function PlayerCard() {
             • Higher level = better success rates
           </div>
         )}
-        
-        <div className="xpbar" style={{ marginTop: 2 }}>
-          <span style={{ width: Math.min(100, (craftingXP / craftingXPNeeded) * 100) + '%' }} />
+
+        <div className="w-full h-2 bg-black/30 rounded-full overflow-hidden mt-0.5">
+          <div
+            className="h-full bg-gradient-to-r from-purple-600 to-purple-500 transition-all duration-300 rounded-full"
+            style={{ width: Math.min(100, (craftingXP / craftingXPNeeded) * 100) + '%' }}
+          />
         </div>
-        <div className="muted" style={{ fontSize: 10, marginTop: 2 }}>
+        <div className="text-muted text-[10px] mt-0.5">
           {craftingXP} / {craftingXPNeeded} XP
         </div>
       </div>
-      
-      <div style={{ marginTop: 8 }}>
+
+      <div className="mt-2">
         {/* Top row: STR, DEX, CON */}
-        <div className="stat-grid" style={{ gridTemplateColumns: 'repeat(3, 1fr)', marginBottom: 8 }}>
-          <StatButton 
-            statKey="str" 
-            statValue={stats.str} 
-          />
-          <StatButton 
-            statKey="dex" 
-            statValue={stats.dex} 
-          />
-          <StatButton 
-            statKey="con" 
-            statValue={stats.con} 
-          />
+        <div className="flex gap-2 mb-2">
+          <div className="flex-1">
+            <StatButton
+              statKey="str"
+              statValue={stats.str}
+            />
+          </div>
+          <div className="flex-1">
+            <StatButton
+              statKey="dex"
+              statValue={stats.dex}
+            />
+          </div>
+          <div className="flex-1">
+            <StatButton
+              statKey="con"
+              statValue={stats.con}
+            />
+          </div>
         </div>
-        
+
         {/* Bottom row: INT, WIS, CHA */}
-        <div className="stat-grid" style={{ gridTemplateColumns: 'repeat(3, 1fr)' }}>
-          <StatButton 
-            statKey="int" 
-            statValue={stats.int} 
-          />
-          <StatButton 
-            statKey="wis" 
-            statValue={stats.wis} 
-          />
-          <StatButton 
-            statKey="cha" 
-            statValue={stats.cha} 
-          />
+        <div className="flex gap-2">
+          <div className="flex-1">
+            <StatButton
+              statKey="int"
+              statValue={stats.int}
+            />
+          </div>
+          <div className="flex-1">
+            <StatButton
+              statKey="wis"
+              statValue={stats.wis}
+            />
+          </div>
+          <div className="flex-1">
+            <StatButton
+              statKey="cha"
+              statValue={stats.cha}
+            />
+          </div>
         </div>
       </div>
     </div>

@@ -126,9 +126,9 @@ const monstersByZone: MonstersByZone = {
   1: [ // Forest Outskirts - AC 8-10 (unarmored, easy to hit)
     { name: "Forest Rabbit", hp: 15, image: "🐰", armorClass: 8 },
     { name: "Wild Boar", hp: 25, image: "🐗", armorClass: 9 },
-    { name: "Forest Spider", hp: 20, image: "🕷️", armorClass: 10 },
+    { name: "Forest Spider", hp: 20, image: "/src/images/monsters/forest-spider.png", armorClass: 10 },
     { name: "Tree Snake", hp: 18, image: "🐍", armorClass: 9 },
-    { name: "Forest Imp", hp: 30, image: "👹", armorClass: 10 }
+    { name: "Forest Imp", hp: 30, image: "/src/images/monsters/forest-imp.png", armorClass: 10 }
   ],
   2: [ // Dark Woods - AC 10-12 (slightly tougher)
     { name: "Shadow Bat", hp: 35, image: "🦇", armorClass: 11 },

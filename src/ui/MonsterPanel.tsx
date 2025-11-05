@@ -150,17 +150,17 @@ const MonsterPanel = () => {
   const formattedBossTimer = bossTimer?.toFixed(1)
 
   return (
-    <div className="card">
+    <div className="bg-panel border border-white/[0.06] rounded-xl p-4 shadow-[0_6px_24px_rgba(0,0,0,0.25)]">
       <DPSPanel />
-      <div className="monster-area" style={{ position: 'relative' }}>
-        <DamageNumberContainer 
-          damageNumbers={damageNumbers} 
-          onRemoveDamageNumber={removeDamageNumber} 
+      <div className="relative">
+        <DamageNumberContainer
+          damageNumbers={damageNumbers}
+          onRemoveDamageNumber={removeDamageNumber}
         />
-        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-          <div style={{ position: 'relative' }}>
+        <div className="flex justify-between items-center">
+          <div className="relative">
             <button
-              className="zone-info-button"
+              className="bg-transparent border-none text-text cursor-pointer text-sm px-2 py-1 rounded hover:bg-white/5 transition-colors"
               onMouseEnter={() => setShowZoneTooltip(true)}
               onMouseLeave={() => setShowZoneTooltip(false)}
               onFocus={() => setShowZoneTooltip(true)}
@@ -169,23 +169,23 @@ const MonsterPanel = () => {
             >
               <b>{currentZone.name}</b>
               {isBoss && ' — Boss!'}
-              <span style={{ marginLeft: 4, opacity: 0.7 }}>ℹ️</span>
+              <span className="ml-1 opacity-70">ℹ️</span>
             </button>
-            
+
             {showZoneTooltip && (
-              <div className="zone-materials-tooltip">
-                <div className="tooltip-header">
-                  <strong>{currentZone.name}</strong>
-                  <span className="zone-level-badge">Level {getZoneLevel(zone || 1)}</span>
+              <div className="absolute top-full left-0 mt-2 bg-panel border border-white/20 rounded-lg p-3 shadow-[0_4px_12px_rgba(0,0,0,0.5)] z-50 min-w-[280px] animate-tooltip-fade-in">
+                <div className="flex justify-between items-center mb-2 pb-2 border-b border-white/10">
+                  <strong className="text-text">{currentZone.name}</strong>
+                  <span className="bg-gold/20 text-gold px-2 py-0.5 rounded text-xs font-bold">Level {getZoneLevel(zone || 1)}</span>
                 </div>
-                <div className="tooltip-description">
+                <div className="text-sm text-muted mb-3">
                   {currentZone.description}
                 </div>
-                <div className="tooltip-section">
-                  <div className="tooltip-section-title">Available Materials:</div>
-                  <div className="materials-tooltip-list">
+                <div>
+                  <div className="text-xs font-bold text-muted uppercase mb-2">Available Materials:</div>
+                  <div className="flex flex-wrap gap-1">
                     {currentZone.rewards.materials.map(material => (
-                      <span key={material} className="material-tooltip-tag">
+                      <span key={material} className="bg-purple/20 text-purple px-2 py-1 rounded text-xs font-medium border border-purple/30">
                         {material.replace(/_/g, ' ')}
                       </span>
                     ))}
@@ -194,10 +194,10 @@ const MonsterPanel = () => {
               </div>
             )}
           </div>
-          <div style={{ display: 'flex', gap: 8, alignItems: 'center' }}>
+          <div className="flex gap-2 items-center">
             {isBoss && <span>⏱ {formattedBossTimer}s</span>}
-            <button 
-              className="zone-select-button"
+            <button
+              className="bg-[#1a1f2a] border border-white/10 rounded-lg px-3 py-2 cursor-pointer text-xl hover:bg-[#222a3a] hover:border-white/20 transition-all"
               onClick={() => useZoneProgression.getState().showZoneSelect()}
               title="Select Zone"
             >
@@ -205,83 +205,77 @@ const MonsterPanel = () => {
             </button>
           </div>
         </div>
-        
-        <button 
-          className="monster-square" 
+
+        <button
+          className="relative w-full bg-[#1a1f2a] border-2 border-white/10 rounded-xl p-6 mt-3 mb-3 cursor-pointer transition-all hover:border-white/20 hover:shadow-[0_4px_12px_rgba(0,0,0,0.3)] active:scale-[0.98]"
           onClick={() => {
             console.log('Monster clicked!')
             click()
           }}
           aria-label="Attack monster"
         >
-          <div style={{ textAlign: 'center' }}>
-            <div style={{ fontSize: 18 }}>
-              {monsterImage} {monsterName}
+          <div className="text-center">
+            <div className="text-lg flex items-center justify-center gap-2">
+              {monsterImage.startsWith('/') || monsterImage.startsWith('http') ? (
+                <img
+                  src={monsterImage}
+                  alt={monsterName}
+                  className="w-12 h-12 object-contain"
+                  style={{ imageRendering: 'pixelated' }}
+                />
+              ) : (
+                <span>{monsterImage}</span>
+              )}
+              <span>{monsterName}</span>
             </div>
-            <div style={{ 
-              fontSize: 12, 
-              color: '#a0aec0', 
-              marginTop: 4,
-              display: 'flex',
-              justifyContent: 'center',
-              alignItems: 'center',
-              gap: 4
-            }}>
-              <span style={{ fontSize: 14 }}>🛡️</span>
+            <div className="text-xs text-muted mt-1 flex justify-center items-center gap-1">
+              <span className="text-sm">🛡️</span>
               <span>AC {monsterAC}</span>
             </div>
             {affixes && affixes.length > 0 && (
-              <div style={{ 
-                display: 'flex', 
-                justifyContent: 'center', 
-                gap: 4, 
-                marginTop: 8,
-                flexWrap: 'wrap'
-              }}>
+              <div className="flex justify-center gap-1 mt-2 flex-wrap">
                 {affixes.map(affix => (
-                  <span 
+                  <span
                     key={affix.id}
-                    style={{ 
-                      display: 'inline-flex',
-                      alignItems: 'center',
-                      gap: 3,
-                      padding: '4px 8px',
+                    className="inline-flex items-center gap-1 px-2 py-1 text-white rounded font-bold text-[11px] border border-white/20"
+                    style={{
                       backgroundColor: affix.color,
-                      color: 'white',
-                      borderRadius: '4px',
-                      fontSize: '11px',
-                      fontWeight: 'bold',
-                      boxShadow: `0 2px 4px ${affix.color}66`,
-                      border: '1px solid rgba(255,255,255,0.2)'
+                      boxShadow: `0 2px 4px ${affix.color}66`
                     }}
                     title={affix.description}
                   >
-                    <span style={{ fontSize: '14px' }}>{affix.icon}</span>
+                    <span className="text-sm">{affix.icon}</span>
                     {affix.name}
                   </span>
                 ))}
               </div>
             )}
-            <div style={{ marginTop: 6 }}>
+            <div className="mt-1.5">
               {Math.ceil(monsterHP)} / {Math.ceil(monsterMaxHP)} HP
             </div>
           </div>
-          <div style={{ position: 'absolute', left: 12, right: 12, bottom: 12 }}>
-            <div className="progress">
-              <span style={{ width: healthPercent + '%' }} />
+          <div className="absolute left-3 right-3 bottom-3">
+            <div className="w-full h-2 bg-black/30 rounded-full overflow-hidden">
+              <div
+                className="h-full bg-gradient-to-r from-red-600 to-red-500 transition-all duration-300 rounded-full"
+                style={{ width: healthPercent + '%' }}
+              />
             </div>
           </div>
         </button>
-        
+
         {!isBoss && (
-          <div className="boss-controls">
+          <div className="mt-3">
             {canTryBoss ? (
-              <button className="boss-button" onClick={tryBoss}>
+              <button
+                className="w-full bg-gradient-to-r from-purple-600 to-purple-700 text-white border-none rounded-lg px-6 py-3 font-bold text-base cursor-pointer transition-all hover:from-purple-500 hover:to-purple-600 hover:shadow-[0_4px_12px_rgba(168,85,247,0.4)] active:scale-[0.98]"
+                onClick={tryBoss}
+              >
                 Fight Boss
               </button>
             ) : (
-              <div className="boss-locked">
-                <span className="muted">Defeat more monsters to unlock boss</span>
+              <div className="text-center py-3 px-4 bg-black/20 rounded-lg border border-white/5">
+                <span className="text-muted text-sm">Defeat more monsters to unlock boss</span>
               </div>
             )}
           </div>

@@ -76,119 +76,87 @@ export default function TavernPanel() {
   }
   
   return (
-    <div className="card">
-      <div style={{ marginBottom: '12px' }}>
-        <h2>🍺 Tavern</h2>
-        <p className="muted">Recruit NPCs and assign them to quests for rewards</p>
+    <div className="bg-panel border border-white/[0.06] rounded-xl p-4 shadow-card">
+      <div className="mb-3">
+        <h2 className="text-xl font-bold text-text m-0 mb-1">🍺 Tavern</h2>
+        <p className="text-sm text-muted m-0">Recruit NPCs and assign them to quests for rewards</p>
       </div>
-      
-      {/* Tab Navigation - Standard Style */}
-      <div className="tab-navigation">
-        <div className="tab-wrapper">
-          <button 
-            className={`tab-button ${selectedTab === 'quests' ? 'active' : ''}`}
+
+      {/* Tab Navigation */}
+      <div className="flex gap-2 mb-4 border-b border-white/10">
+        <div className="relative">
+          <button
+            className={`px-4 py-2 text-sm font-medium border-b-2 transition-colors ${
+              selectedTab === 'quests'
+                ? 'text-text border-gold bg-white/5'
+                : 'text-muted border-transparent hover:text-text hover:bg-white/5'
+            }`}
             onClick={() => setSelectedTab('quests')}
           >
             Active Quests
-            {activeAssignments.length > 0 && <span className="alert-dot" />}
+            {activeAssignments.length > 0 && <span className="absolute top-1.5 right-1.5 w-2 h-2 bg-gold rounded-full animate-pulse" />}
           </button>
         </div>
-        <div className="tab-wrapper">
-          <button 
-            className={`tab-button ${selectedTab === 'npcs' ? 'active' : ''}`}
+        <div className="relative">
+          <button
+            className={`px-4 py-2 text-sm font-medium border-b-2 transition-colors ${
+              selectedTab === 'npcs'
+                ? 'text-text border-gold bg-white/5'
+                : 'text-muted border-transparent hover:text-text hover:bg-white/5'
+            }`}
             onClick={() => setSelectedTab('npcs')}
           >
             NPCs ({ownedNPCs.length})
           </button>
         </div>
       </div>
-      
-      <div className="tab-content">
+
+      <div>
         {selectedTab === 'quests' && (
         <div>
           {/* Quest Assignment */}
-          <div style={{ 
-            marginBottom: '16px', 
-            padding: '16px', 
-            background: 'linear-gradient(135deg, #1e293b, #0f172a)',
-            border: '1px solid rgba(59, 130, 246, 0.3)', 
-            borderRadius: '8px' 
-          }}>
-            <h3 style={{ marginTop: 0, marginBottom: '12px' }}>Assign New Quest</h3>
-            <div style={{ display: 'grid', gap: '10px', marginBottom: '12px' }}>
+          <div className="mb-4 p-4 bg-gradient-to-br from-slate-800 to-slate-900 border border-blue-500/30 rounded-lg">
+            <h3 className="text-base font-bold text-text m-0 mb-3">Assign New Quest</h3>
+            <div className="flex flex-col gap-3 mb-3">
               <div>
-                <label style={{ 
-                  display: 'block', 
-                  fontSize: '12px', 
-                  color: 'var(--muted)', 
-                  marginBottom: '6px',
-                  fontWeight: '500'
-                }}>
+                <label className="block text-xs text-muted mb-1.5 font-medium">
                   Select NPC
                 </label>
-                <select 
-                  value={selectedNPC} 
+                <select
+                  value={selectedNPC}
                   onChange={(e) => setSelectedNPC(e.target.value)}
-                  style={{ 
-                    width: '100%',
-                    padding: '10px 12px',
-                    background: '#1a1f2a',
-                    border: '1px solid rgba(255, 255, 255, 0.12)',
-                    borderRadius: '8px',
-                    color: 'var(--text)',
-                    fontSize: '14px',
-                    cursor: 'pointer',
-                    transition: 'all 0.2s ease'
-                  }}
+                  className="w-full px-3 py-2.5 bg-[#1a1f2a] border border-white/[0.12] rounded-lg text-text text-sm cursor-pointer transition-all"
                 >
-                  <option value="" style={{ background: '#1a1f2a', color: 'var(--muted)' }}>
+                  <option value="">
                     Choose an available NPC...
                   </option>
                   {ownedNPCs.filter(npc => isNPCAvailable(npc.npcId)).map(npc => (
-                    <option 
-                      key={npc.npcId} 
+                    <option
+                      key={npc.npcId}
                       value={npc.npcId}
-                      style={{ background: '#1a1f2a', color: 'var(--text)' }}
                     >
                       {npc.name} - Lv.{npc.level} ({npc.rarity})
                     </option>
                   ))}
                 </select>
               </div>
-              
+
               <div>
-                <label style={{ 
-                  display: 'block', 
-                  fontSize: '12px', 
-                  color: 'var(--muted)', 
-                  marginBottom: '6px',
-                  fontWeight: '500'
-                }}>
+                <label className="block text-xs text-muted mb-1.5 font-medium">
                   Select Quest
                 </label>
-                <select 
-                  value={selectedQuest} 
+                <select
+                  value={selectedQuest}
                   onChange={(e) => setSelectedQuest(e.target.value)}
-                  style={{ 
-                    width: '100%',
-                    padding: '10px 12px',
-                    background: '#1a1f2a',
-                    border: '1px solid rgba(255, 255, 255, 0.12)',
-                    borderRadius: '8px',
-                    color: 'var(--text)',
-                    fontSize: '14px',
-                    cursor: 'pointer',
-                    transition: 'all 0.2s ease'
-                  }}
+                  className="w-full px-3 py-2.5 bg-[#1a1f2a] border border-white/[0.12] rounded-lg text-text text-sm cursor-pointer transition-all"
                 >
-                  <option value="" style={{ background: '#1a1f2a', color: 'var(--muted)' }}>
+                  <option value="">
                     Choose a quest...
                   </option>
                   {availableQuests.map(quest => (
-                    <option 
-                      key={quest.id} 
+                    <option
+                      key={quest.id}
                       value={quest.id}
-                      style={{ background: '#1a1f2a', color: 'var(--text)' }}
                     >
                       {quest.name} ({formatTime(quest.baseDuration)})
                     </option>
@@ -196,56 +164,43 @@ export default function TavernPanel() {
                 </select>
               </div>
             </div>
-            <button 
+            <button
               onClick={handleAssignQuest}
               disabled={!selectedNPC || !selectedQuest}
-              style={{
-                width: '100%',
-                padding: '12px',
-                background: (!selectedNPC || !selectedQuest) 
-                  ? '#374151' 
-                  : 'linear-gradient(135deg, #10b981, #059669)',
-                border: 'none',
-                borderRadius: '8px',
-                color: 'white',
-                fontSize: '14px',
-                fontWeight: 'bold',
-                cursor: (!selectedNPC || !selectedQuest) ? 'not-allowed' : 'pointer',
-                transition: 'all 0.2s ease'
-              }}
+              className={`w-full py-3 rounded-lg text-white text-sm font-bold transition-all ${
+                (!selectedNPC || !selectedQuest)
+                  ? 'bg-gray-700 cursor-not-allowed opacity-60'
+                  : 'bg-gradient-to-r from-green-500 to-green-600 cursor-pointer hover:scale-105'
+              }`}
             >
               {!selectedNPC || !selectedQuest ? '⚠ Select NPC and Quest' : '✓ Assign Quest'}
             </button>
           </div>
-          
+
           {/* Active Assignments */}
-          <div style={{ marginBottom: '16px' }}>
-            <h3>Active Assignments</h3>
+          <div className="mb-4">
+            <h3 className="text-base font-bold text-text mb-2">Active Assignments</h3>
             {activeAssignments.length === 0 ? (
-              <p className="muted">No active quests</p>
+              <p className="text-sm text-muted">No active quests</p>
             ) : (
               activeAssignments.map(assignment => {
                 const progress = getQuestProgress(assignment.id)
                 const remainingTime = Math.max(0, (assignment.startTime + assignment.duration - Date.now()) / 1000)
-                
+
                 return (
-                  <div key={assignment.id} style={{ padding: '8px', border: '1px solid #333', borderRadius: '4px', marginBottom: '8px' }}>
-                    <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+                  <div key={assignment.id} className="p-2 border border-white/20 rounded mb-2">
+                    <div className="flex justify-between items-center">
                       <div>
-                        <strong>{availableNPCs.find(n => n.id === assignment.npcId)?.name || assignment.npcId}</strong>
+                        <strong className="text-text">{availableNPCs.find(n => n.id === assignment.npcId)?.name || assignment.npcId}</strong>
                         <br />
-                        <span className="muted">{availableQuests.find(q => q.id === assignment.questId)?.name || assignment.questId}</span>
+                        <span className="text-sm text-muted">{availableQuests.find(q => q.id === assignment.questId)?.name || assignment.questId}</span>
                       </div>
-                      <div style={{ textAlign: 'right' }}>
-                        <div>{formatTime(Math.floor(remainingTime))}</div>
-                        <div style={{ width: '100px', height: '8px', backgroundColor: '#333', borderRadius: '4px', overflow: 'hidden' }}>
-                          <div 
-                            style={{ 
-                              width: `${progress * 100}%`, 
-                              height: '100%', 
-                              backgroundColor: '#4caf50',
-                              transition: 'width 0.5s ease'
-                            }}
+                      <div className="text-right">
+                        <div className="text-sm text-text mb-1">{formatTime(Math.floor(remainingTime))}</div>
+                        <div className="w-24 h-2 bg-black/30 rounded overflow-hidden">
+                          <div
+                            className="h-full bg-green-500 transition-all duration-500"
+                            style={{ width: `${progress * 100}%` }}
                           />
                         </div>
                       </div>
@@ -255,20 +210,23 @@ export default function TavernPanel() {
               })
             )}
           </div>
-          
+
           {/* Completed Assignments */}
           {completedAssignments.length > 0 && (
             <div>
-              <h3>Completed Quests</h3>
+              <h3 className="text-base font-bold text-text mb-2">Completed Quests</h3>
               {completedAssignments.map(assignment => (
-                <div key={assignment.id} style={{ padding: '8px', border: '1px solid #4caf50', borderRadius: '4px', marginBottom: '8px' }}>
-                  <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+                <div key={assignment.id} className="p-2 border border-green-500 rounded mb-2">
+                  <div className="flex justify-between items-center">
                     <div>
-                      <strong>{availableNPCs.find(n => n.id === assignment.npcId)?.name || assignment.npcId}</strong>
+                      <strong className="text-text">{availableNPCs.find(n => n.id === assignment.npcId)?.name || assignment.npcId}</strong>
                       <br />
-                      <span className="muted">{availableQuests.find(q => q.id === assignment.questId)?.name || assignment.questId}</span>
+                      <span className="text-sm text-muted">{availableQuests.find(q => q.id === assignment.questId)?.name || assignment.questId}</span>
                     </div>
-                    <button onClick={() => claimCompletedQuest(assignment.id)}>
+                    <button
+                      className="bg-gold hover:bg-yellow-600 text-bg font-bold py-2 px-4 rounded cursor-pointer transition-colors"
+                      onClick={() => claimCompletedQuest(assignment.id)}
+                    >
                       Claim Rewards
                     </button>
                   </div>
@@ -282,10 +240,10 @@ export default function TavernPanel() {
       {selectedTab === 'npcs' && (
         <div>
           {/* Owned NPCs */}
-          <div style={{ marginBottom: '16px' }}>
-            <h3>Your NPCs</h3>
+          <div className="mb-4">
+            <h3 className="text-base font-bold text-text mb-2">Your NPCs</h3>
             {ownedNPCs.length === 0 ? (
-              <p className="muted">No NPCs recruited</p>
+              <p className="text-sm text-muted">No NPCs recruited</p>
             ) : (
               ownedNPCs.map(npc => {
                 const isAvailable = isNPCAvailable(npc.npcId)
@@ -293,99 +251,88 @@ export default function TavernPanel() {
                 const xpNeeded = calculateXPForLevel(npc, npc.level)
                 const xpProgress = (npc.xp / xpNeeded) * 100
                 const currentStats = calculateNPCStatsAtLevel(npc, npc.level)
-                
+
                 return (
-                  <div key={npc.npcId} style={{ padding: '12px', border: '1px solid #333', borderRadius: '4px', marginBottom: '8px' }}>
-                    <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', marginBottom: '8px' }}>
-                      <div style={{ flex: 1 }}>
-                        <div style={{ display: 'flex', alignItems: 'center', gap: '8px', marginBottom: '4px' }}>
+                  <div key={npc.npcId} className="p-3 border border-white/20 rounded mb-2">
+                    <div className="flex justify-between items-start mb-2">
+                      <div className="flex-1">
+                        <div className="flex items-center gap-2 mb-1">
                           <strong style={{ color: getRarityColor(npc.rarity) }}>{npc.name}</strong>
-                          <span style={{ 
-                            backgroundColor: '#333', 
-                            padding: '2px 6px', 
-                            borderRadius: '3px', 
-                            fontSize: '11px',
-                            fontWeight: 'bold'
-                          }}>
+                          <span className="bg-black/30 px-1.5 py-0.5 rounded text-[11px] font-bold">
                             Lv.{npc.level}
                           </span>
                         </div>
-                        <span className="muted" style={{ fontSize: '12px' }}>{npc.description}</span>
+                        <span className="text-xs text-muted">{npc.description}</span>
                       </div>
-                      <div style={{ textAlign: 'right' }}>
+                      <div className="text-right">
                         {isAvailable ? (
-                          <span style={{ color: '#4caf50', fontSize: '12px' }}>✓ Available</span>
+                          <span className="text-xs text-green-500">✓ Available</span>
                         ) : (
-                          <span style={{ color: '#ff9800', fontSize: '12px' }}>
+                          <span className="text-xs text-orange-500">
                             ⏱ On Quest
                             {activeAssignment && (
                               <>
                                 <br />
-                                <small>{availableQuests.find(q => q.id === activeAssignment.questId)?.name}</small>
+                                <small className="text-[10px]">{availableQuests.find(q => q.id === activeAssignment.questId)?.name}</small>
                               </>
                             )}
                           </span>
                         )}
                       </div>
                     </div>
-                    
+
                     {/* XP Bar */}
-                    <div style={{ marginBottom: '8px' }}>
-                      <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: '11px', marginBottom: '2px' }}>
-                        <span className="muted">XP: {npc.xp} / {xpNeeded}</span>
-                        <span className="muted">Quests: {npc.totalQuestsCompleted}</span>
+                    <div className="mb-2">
+                      <div className="flex justify-between text-[11px] mb-0.5">
+                        <span className="text-muted">XP: {npc.xp} / {xpNeeded}</span>
+                        <span className="text-muted">Quests: {npc.totalQuestsCompleted}</span>
                       </div>
-                      <div style={{ width: '100%', height: '6px', backgroundColor: '#222', borderRadius: '3px', overflow: 'hidden' }}>
-                        <div 
-                          style={{ 
-                            width: `${xpProgress}%`, 
-                            height: '100%', 
-                            backgroundColor: '#4caf50',
-                            transition: 'width 0.3s ease'
-                          }}
+                      <div className="w-full h-1.5 bg-[#222] rounded overflow-hidden">
+                        <div
+                          className="h-full bg-green-500 transition-all duration-300"
+                          style={{ width: `${xpProgress}%` }}
                         />
                       </div>
                     </div>
-                    
+
                     {/* Friendship Bar */}
-                    <div style={{ marginBottom: '8px' }}>
-                      <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: '11px', marginBottom: '2px' }}>
-                        <span className="muted">💖 Friendship</span>
-                        <span style={{ 
-                          color: npc.friendship >= 80 ? '#e91e63' : npc.friendship >= 50 ? '#ff9800' : '#888',
-                          fontWeight: 'bold'
-                        }}>
+                    <div className="mb-2">
+                      <div className="flex justify-between text-[11px] mb-0.5">
+                        <span className="text-muted">💖 Friendship</span>
+                        <span
+                          className="font-bold"
+                          style={{ color: npc.friendship >= 80 ? '#e91e63' : npc.friendship >= 50 ? '#ff9800' : '#888' }}
+                        >
                           {npc.friendship}/100
                         </span>
                       </div>
-                      <div style={{ width: '100%', height: '6px', backgroundColor: '#222', borderRadius: '3px', overflow: 'hidden' }}>
-                        <div 
-                          style={{ 
-                            width: `${npc.friendship}%`, 
-                            height: '100%', 
-                            backgroundColor: npc.friendship >= 80 ? '#e91e63' : npc.friendship >= 50 ? '#ff9800' : '#888',
-                            transition: 'width 0.3s ease'
+                      <div className="w-full h-1.5 bg-[#222] rounded overflow-hidden">
+                        <div
+                          className="h-full transition-all duration-300"
+                          style={{
+                            width: `${npc.friendship}%`,
+                            backgroundColor: npc.friendship >= 80 ? '#e91e63' : npc.friendship >= 50 ? '#ff9800' : '#888'
                           }}
                         />
                       </div>
-                      <div style={{ fontSize: '10px', color: '#888', marginTop: '2px' }}>
+                      <div className="text-[10px] text-muted mt-0.5">
                         XP Multiplier: {(0.5 + npc.friendship * 0.01).toFixed(2)}x
                       </div>
                     </div>
-                    
+
                     {/* Stats */}
-                    <div style={{ fontSize: '12px', display: 'flex', gap: '16px', flexWrap: 'wrap' }}>
+                    <div className="text-xs flex gap-4 flex-wrap">
                       <div>
-                        <span className="muted">Speed:</span>{' '}
-                        <span style={{ color: '#4caf50' }}>{currentStats.speed.toFixed(2)}x</span>
+                        <span className="text-muted">Speed:</span>{' '}
+                        <span className="text-green-500">{currentStats.speed.toFixed(2)}x</span>
                       </div>
                       <div>
-                        <span className="muted">Yield:</span>{' '}
-                        <span style={{ color: '#4caf50' }}>{currentStats.yield.toFixed(2)}x</span>
+                        <span className="text-muted">Yield:</span>{' '}
+                        <span className="text-green-500">{currentStats.yield.toFixed(2)}x</span>
                       </div>
                       <div>
-                        <span className="muted">Traits:</span>{' '}
-                        <span>{npc.traits.map(t => t.name).join(', ')}</span>
+                        <span className="text-muted">Traits:</span>{' '}
+                        <span className="text-text">{npc.traits.map(t => t.name).join(', ')}</span>
                       </div>
                     </div>
                   </div>
@@ -393,41 +340,34 @@ export default function TavernPanel() {
               })
             )}
           </div>
-          
+
           {/* Available NPCs to Recruit */}
-          <div style={{ marginTop: '24px', paddingTop: '16px', borderTop: '2px solid #444' }}>
-            <h3 style={{ color: 'var(--gold)', marginBottom: '12px' }}>🎯 Recruit NPCs</h3>
-            
+          <div className="mt-6 pt-4 border-t-2 border-white/30">
+            <h3 className="text-base font-bold text-gold mb-3">🎯 Recruit NPCs</h3>
+
             {/* Constitution Info Banner */}
-            <div style={{ 
-              padding: '8px', 
-              backgroundColor: '#1a2332', 
-              borderRadius: '4px', 
-              marginBottom: '12px',
-              fontSize: '12px',
-              border: '1px solid #2a4060'
-            }}>
-              <div style={{ display: 'flex', alignItems: 'center', gap: '8px', marginBottom: '4px' }}>
-                <span style={{ fontSize: '16px' }}>🛡️</span>
-                <strong>Your Constitution: {constitutionStat}</strong>
+            <div className="p-2 bg-blue-900/30 rounded border border-blue-500/40 mb-3 text-xs">
+              <div className="flex items-center gap-2 mb-1">
+                <span className="text-base">🛡️</span>
+                <strong className="text-text">Your Constitution: {constitutionStat}</strong>
               </div>
-              <div className="muted" style={{ fontSize: '11px' }}>
+              <div className="text-muted text-[11px]">
                 • Better recruitment chances for rare NPCs<br/>
                 • Starting friendship: {Math.min(100, 20 + constitutionStat)}/100<br/>
                 • Friendship gain per quest: +{Math.min(3, 1 + Math.floor(constitutionStat / 10))}<br/>
                 • Boss damage bonus: +{(constitutionStat * 3).toFixed(0)}%
               </div>
             </div>
-            
+
             {availableNPCs.filter(npc => !ownedNPCs.some(owned => owned.npcId === npc.id)).length === 0 ? (
-              <p className="muted">No NPCs available to recruit at the moment.</p>
+              <p className="text-sm text-muted">No NPCs available to recruit at the moment.</p>
             ) : (
               availableNPCs.filter(npc => !ownedNPCs.some(owned => owned.npcId === npc.id)).map(npc => {
                 const cost = npc.recruitmentCost.gold
                 const canAfford = gold >= cost
                 const recruitChance = calculateRecruitmentChance(npc, constitutionStat)
                 const startingFriendship = Math.min(100, 20 + constitutionStat)
-                
+
                 // Determine chance color
                 let chanceColor = '#888'
                 if (recruitChance >= 0.9) chanceColor = '#4caf50' // Green - Very High
@@ -435,71 +375,57 @@ export default function TavernPanel() {
                 else if (recruitChance >= 0.6) chanceColor = '#ffc107' // Yellow - Moderate
                 else if (recruitChance >= 0.4) chanceColor = '#ff9800' // Orange - Low
                 else chanceColor = '#f44336' // Red - Very Low
-                
+
                 return (
-                  <div key={npc.id} style={{ padding: '12px', border: '1px solid #333', borderRadius: '4px', marginBottom: '8px', backgroundColor: '#1a1a1a' }}>
-                    <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start' }}>
-                      <div style={{ flex: 1 }}>
-                        <div style={{ marginBottom: '4px' }}>
-                          <strong style={{ color: getRarityColor(npc.rarity), fontSize: '14px' }}>{npc.name}</strong>
-                          <span style={{ 
-                            marginLeft: '8px', 
-                            padding: '2px 6px', 
-                            backgroundColor: chanceColor + '22',
-                            border: `1px solid ${chanceColor}`,
-                            borderRadius: '3px',
-                            fontSize: '11px',
-                            color: chanceColor,
-                            fontWeight: 'bold'
-                          }}>
+                  <div key={npc.id} className="p-3 border border-white/20 rounded mb-2 bg-[#1a1a1a]">
+                    <div className="flex justify-between items-start">
+                      <div className="flex-1">
+                        <div className="mb-1">
+                          <strong className="text-sm" style={{ color: getRarityColor(npc.rarity) }}>{npc.name}</strong>
+                          <span
+                            className="ml-2 px-1.5 py-0.5 rounded text-[11px] font-bold"
+                            style={{
+                              backgroundColor: chanceColor + '22',
+                              border: `1px solid ${chanceColor}`,
+                              color: chanceColor
+                            }}
+                          >
                             {(recruitChance * 100).toFixed(0)}% Chance
                           </span>
                         </div>
-                        <span className="muted" style={{ fontSize: '12px' }}>{npc.description}</span>
-                        <div style={{ marginTop: '6px', fontSize: '11px' }}>
-                          <div style={{ color: '#8bc34a' }}>
+                        <span className="text-xs text-muted">{npc.description}</span>
+                        <div className="mt-1.5 text-[11px]">
+                          <div className="text-lime-400">
                             ⚡ Speed: {npc.baseStats.speed}x | 💎 Yield: {npc.baseStats.yield}x
                           </div>
-                          <div style={{ color: '#64b5f6', marginTop: '2px' }}>
+                          <div className="text-blue-400 mt-0.5">
                             ✨ Traits: {npc.traits.map(t => t.name).join(', ')}
                           </div>
-                          <div style={{ color: '#ffb74d', marginTop: '2px' }}>
+                          <div className="text-orange-400 mt-0.5">
                             💖 Starting Friendship: {startingFriendship}/100
                           </div>
                         </div>
                       </div>
-                      <div style={{ textAlign: 'right', marginLeft: '16px' }}>
-                        <div style={{ 
-                          marginBottom: '6px', 
-                          fontSize: '14px',
-                          fontWeight: 'bold',
-                          color: canAfford ? 'var(--gold)' : '#888'
-                        }}>
+                      <div className="text-right ml-4">
+                        <div
+                          className="mb-1.5 text-sm font-bold"
+                          style={{ color: canAfford ? 'var(--gold)' : '#888' }}
+                        >
                           💰 {cost.toLocaleString()}
                         </div>
-                        <button 
+                        <button
                           onClick={() => handleRecruitNPC(npc.id)}
                           disabled={!canAfford}
-                          style={{ 
-                            backgroundColor: canAfford ? '#4caf50' : '#444',
-                            cursor: canAfford ? 'pointer' : 'not-allowed',
-                            padding: '6px 12px',
-                            fontSize: '12px',
-                            border: 'none',
-                            borderRadius: '4px',
-                            color: canAfford ? '#fff' : '#888',
-                            fontWeight: 'bold'
-                          }}
+                          className={`px-3 py-1.5 text-xs rounded font-bold ${
+                            canAfford
+                              ? 'bg-green-500 hover:bg-green-600 text-white cursor-pointer'
+                              : 'bg-gray-700 text-gray-500 cursor-not-allowed'
+                          }`}
                         >
                           {canAfford ? 'Recruit' : 'Not Enough Gold'}
                         </button>
                         {recruitChance < 0.99 && (
-                          <div style={{ 
-                            marginTop: '4px', 
-                            fontSize: '10px', 
-                            color: '#888',
-                            fontStyle: 'italic'
-                          }}>
+                          <div className="mt-1 text-[10px] text-muted italic">
                             {recruitChance < 0.5 ? '⚠️ May fail' : 'Can retry if failed'}
                           </div>
                         )}

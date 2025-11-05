@@ -9,6 +9,7 @@ import GoalsPanel from '@/ui/GoalsPanel'
 import LogWindow from '@/ui/LogWindow'
 import ZoneSelectionScreen from '@/ui/ZoneSelectionScreen'
 import StartScreen from '@/ui/StartScreen'
+import LoadingScreen from '@/ui/LoadingScreen'
 import TabPanel from '@/ui/TabPanel'
 import ResourceBar from '@/ui/components/ResourceBar'
 import OfflineProgressPopup from '@/ui/components/OfflineProgressPopup'
@@ -29,6 +30,7 @@ import DebugOverlay from '@/ui/components/DebugOverlay'
 
 export default function App(){
   const { showZoneSelection, canPrestige } = useZoneProgression()
+  const [showLoadingScreen, setShowLoadingScreen] = useState(true)
   const [showStartScreen, setShowStartScreen] = useState(true)
   const [isGameInitialized, setIsGameInitialized] = useState(false)
   const [activeTab, setActiveTab] = useState('character')
@@ -121,7 +123,17 @@ export default function App(){
     setOfflineProgress(null)
     setLastActiveTime(Date.now())
   }
-  
+
+  const handleLoadComplete = () => {
+    setShowLoadingScreen(false)
+  }
+
+  // Show loading screen first
+  if (showLoadingScreen) {
+    return <LoadingScreen onLoadComplete={handleLoadComplete} />
+  }
+
+  // Then show start screen
   if (showStartScreen) {
     return <StartScreen onStartAdventure={handleStartAdventure} />
   }
@@ -220,20 +232,20 @@ export default function App(){
   }
   
   return (
-    <div className="app">
+    <div className="min-h-screen bg-bg text-text p-3">
       <AudioControls />
-      <div className="top">
-        <div className="card">
+      <div className="flex gap-3 mb-3 flex-col md:flex-row">
+        <div className="bg-panel border border-white/[0.06] rounded-xl p-4 shadow-card">
           <b>Clicker V2</b>
-          <div className="muted">RPG stats + town + drops + equipment</div>
+          <div className="text-muted">RPG stats + town + drops + equipment</div>
         </div>
-        <div className="card" style={{ flex: 1 }}>
+        <div className="bg-panel border border-white/[0.06] rounded-xl p-4 shadow-card flex-1">
           <ResourceBar />
         </div>
       </div>
-      <div className="layout">
-        <div>
-          <TabPanel 
+      <div className="flex flex-col md:flex-row gap-3">
+        <div className="w-full md:w-[400px]">
+          <TabPanel
             tabs={tabs}
             allTabs={allTabs}
             defaultTab="character"
@@ -246,51 +258,48 @@ export default function App(){
             }}
           />
         </div>
-        <div 
-          className={`right-column ${getBackgroundImage() ? 'with-background' : ''}`}
+        <div
+          className={`flex-1 ${getBackgroundImage() ? 'bg-cover bg-center bg-no-repeat' : ''}`}
           style={getBackgroundImage() ? {
             backgroundImage: `url(${getBackgroundImage()})`,
-            backgroundSize: 'cover',
-            backgroundPosition: 'center',
-            backgroundRepeat: 'no-repeat'
           } : {}}
         >
           {/* Keep components rendered but hidden to maintain functionality */}
           <div style={{ display: getBackgroundImage() ? 'none' : 'block' }}>
             <MonsterPanel/>
-            <div style={{height:12}}/>
+            <div className="h-3"/>
             <LogWindow/>
           </div>
-          
+
           {/* Hidden components for background processing */}
           {getBackgroundImage() && (
-            <div style={{ display: 'none' }}>
+            <div className="hidden">
               <MonsterPanel/>
               <LogWindow/>
             </div>
           )}
         </div>
       </div>
-      
+
       {showZoneSelection && <ZoneSelectionScreen />}
       {offlineProgress && (
-        <OfflineProgressPopup 
-          progress={offlineProgress} 
-          onClaim={handleClaimOfflineProgress} 
+        <OfflineProgressPopup
+          progress={offlineProgress}
+          onClaim={handleClaimOfflineProgress}
         />
       )}
-      
+
       {/* Toast Notifications */}
-      <div className="toast-container">
+      <div className="fixed top-5 right-5 z-[10000] flex flex-col gap-2.5 pointer-events-none">
         {toasts.map((toast) => (
-          <ToastNotification 
-            key={toast.id} 
-            toast={toast} 
-            onClose={removeToast} 
+          <ToastNotification
+            key={toast.id}
+            toast={toast}
+            onClose={removeToast}
           />
         ))}
       </div>
-      
+
       <DebugOverlay />
     </div>
   )

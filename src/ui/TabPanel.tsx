@@ -30,34 +30,40 @@ export default function TabPanel({ tabs, allTabs, defaultTab, onTabChange }: Tab
   const activeTabContent = tabs.find(tab => tab.id === activeTab)?.content
   
   return (
-    <div className="tab-panel">
-      <div className="tab-navigation">
+    <div>
+      <div className="flex gap-1 mb-3 border-b border-white/10 pb-0">
         {allTabs.map(tab => {
           const isUnlocked = tab.isUnlocked()
           const isActive = activeTab === tab.id
-          
+
           return (
-            <div key={tab.id} className="tab-wrapper">
+            <div key={tab.id} className="relative">
               <button
-                className={`tab-button ${isActive ? 'active' : ''} ${!isUnlocked ? 'locked' : ''}`}
+                className={`relative px-4 py-2.5 text-sm font-medium transition-all border-b-2 ${
+                  isActive
+                    ? 'text-text border-gold bg-white/5'
+                    : isUnlocked
+                      ? 'text-muted border-transparent hover:text-text hover:bg-white/5'
+                      : 'text-muted/50 border-transparent cursor-not-allowed opacity-60'
+                }`}
                 onClick={() => handleTabChange(tab.id)}
                 disabled={!isUnlocked}
                 title={!isUnlocked ? tab.unlockTooltip : undefined}
               >
                 {tab.label}
                 {tab.hasAlert && isUnlocked && (
-                  <span className="alert-dot">
+                  <span className="absolute top-1.5 right-1.5 w-2 h-2 bg-gold rounded-full animate-pulse">
                   </span>
                 )}
                 {!isUnlocked && (
-                  <span className="lock-icon">🔒</span>
+                  <span className="ml-1.5 text-xs">🔒</span>
                 )}
               </button>
             </div>
           )
         })}
       </div>
-      <div className="tab-content">
+      <div>
         {activeTabContent}
       </div>
     </div>

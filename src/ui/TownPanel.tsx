@@ -48,34 +48,34 @@ function BuildingTile({ townBuilding, buildingData, canUpgrade, onUpgrade }: Bui
     : ''
 
   return (
-    <div className="building-tile">
-      <div style={{ display: 'flex', justifyContent: 'space-between' }}>
+    <div className="bg-black/20 border border-white/10 rounded-lg p-3 transition-all hover:bg-black/30">
+      <div className="flex justify-between">
         <div>
-          <b>{buildingData.name}</b>
-          <div className="muted" style={{ fontSize: '11px', whiteSpace: 'pre-line' }}>
+          <b className="text-text">{buildingData.name}</b>
+          <div className="text-muted text-[11px] whitespace-pre-line">
             {dynamicDescription}
           </div>
         </div>
-        <span className="muted">Lv {townBuilding.level}/{buildingData.maxLevel}</span>
+        <span className="text-muted text-sm">Lv {townBuilding.level}/{buildingData.maxLevel}</span>
       </div>
-      
-      <div className="muted" style={{ fontSize: '12px', marginTop: '4px' }}>
+
+      <div className="text-muted text-xs mt-1">
         Category: {buildingData.category}
       </div>
-      
+
       {!isMaxLevel && (
-        <button 
-          disabled={!canActuallyUpgrade} 
+        <button
+          disabled={!canActuallyUpgrade}
           onClick={() => onUpgrade(townBuilding.id)}
-          style={{ marginTop: '6px' }}
+          className="mt-1.5 w-full"
         >
           {townBuilding.level === 0 ? 'Unlock' : 'Upgrade'} — {cost.gold?.toLocaleString() || 0}g
           {materialsText && ` + ${materialsText}`}
         </button>
       )}
-      
+
       {isMaxLevel && (
-        <div className="muted" style={{ marginTop: '6px' }}>
+        <div className="text-muted mt-1.5 text-center text-sm">
           Max Level Reached
         </div>
       )}
@@ -88,15 +88,15 @@ export default function TownPanel() {
   const availableBuildings = getAvailableBuildings()
 
   return (
-    <div className="card">
-      <h3>Town</h3>
-      <div style={{ display: 'grid', gap: '8px', marginTop: '8px' }}>
+    <div className="bg-panel border border-white/[0.06] rounded-xl p-4 shadow-card">
+      <h3 className="m-0 mb-3 text-text">Town</h3>
+      <div className="flex flex-col gap-2">
         {availableBuildings.map(buildingData => {
           const townBuilding = buildings.find(b => b.id === buildingData.id)
           if (!townBuilding) return null
-          
+
           return (
-            <BuildingTile 
+            <BuildingTile
               key={buildingData.id}
               townBuilding={townBuilding}
               buildingData={buildingData}

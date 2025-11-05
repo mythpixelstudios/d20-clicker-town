@@ -70,27 +70,15 @@ interface LogItemProps {
 
 function LogItem({ log }: LogItemProps) {
   const { icon, color } = getLogStyle(log.type)
-  
+
   return (
-    <div style={{
-      display: 'flex',
-      alignItems: 'flex-start',
-      gap: 8,
-      padding: '6px 8px',
-      borderBottom: '1px solid var(--border)',
-      fontSize: 12,
-      lineHeight: 1.3
-    }}>
-      <span style={{ fontSize: 14, minWidth: 16 }}>{icon}</span>
-      <div style={{ flex: 1, minWidth: 0 }}>
-        <div style={{ color: color, fontWeight: 500 }}>
+    <div className="flex items-start gap-2 px-2 py-1.5 border-b border-white/[0.06] text-xs leading-snug">
+      <span className="text-sm min-w-[16px]">{icon}</span>
+      <div className="flex-1 min-w-0">
+        <div className="font-medium" style={{ color: color }}>
           {log.message}
         </div>
-        <div style={{ 
-          color: 'var(--muted)', 
-          fontSize: 10, 
-          marginTop: 2 
-        }}>
+        <div className="text-muted text-[10px] mt-0.5">
           {formatTimestamp(log.timestamp)}
         </div>
       </div>
@@ -101,42 +89,24 @@ function LogItem({ log }: LogItemProps) {
 export default function LogWindow() {
   const { clearLogs, getFilteredLogs, activeFilter, setFilter } = useLog()
   const filteredLogs = getFilteredLogs()
-  
+
   const categories: Array<LogCategory | 'all'> = ['all', 'combat', 'crafting', 'town', 'tavern', 'progression']
-  
+
   return (
-    <div className="card" style={{ height: 250 }}>
-      <div style={{ 
-        display: 'flex', 
-        justifyContent: 'space-between', 
-        alignItems: 'center',
-        marginBottom: 8
-      }}>
+    <div className="bg-panel border border-white/[0.06] rounded-xl p-4 shadow-card h-[250px]">
+      <div className="flex justify-between items-center mb-2">
         <b>Activity Log</b>
-        <button 
+        <button
           onClick={clearLogs}
-          style={{
-            background: 'none',
-            border: '1px solid var(--border)',
-            borderRadius: 4,
-            padding: '2px 6px',
-            fontSize: 10,
-            color: 'var(--muted)',
-            cursor: 'pointer'
-          }}
+          className="bg-transparent border border-white/[0.06] rounded px-1.5 py-0.5 text-[10px] text-muted cursor-pointer hover:bg-white/5 hover:text-text transition-colors"
           title="Clear logs"
         >
           Clear
         </button>
       </div>
-      
+
       {/* Category Filter */}
-      <div style={{
-        display: 'flex',
-        gap: 4,
-        marginBottom: 8,
-        flexWrap: 'wrap'
-      }}>
+      <div className="flex gap-1 mb-2 flex-wrap">
         {categories.map(category => {
           const info = getCategoryInfo(category)
           const isActive = activeFilter === category
@@ -144,19 +114,11 @@ export default function LogWindow() {
             <button
               key={category}
               onClick={() => setFilter(category)}
-              style={{
-                background: isActive ? 'var(--primary)' : 'var(--background)',
-                border: '1px solid var(--border)',
-                borderRadius: 4,
-                padding: '2px 8px',
-                fontSize: 10,
-                color: isActive ? 'white' : 'var(--text)',
-                cursor: 'pointer',
-                display: 'flex',
-                alignItems: 'center',
-                gap: 4,
-                transition: 'all 0.2s'
-              }}
+              className={`border rounded px-2 py-0.5 text-[10px] cursor-pointer flex items-center gap-1 transition-all ${
+                isActive
+                  ? 'bg-gold/20 border-gold/40 text-text'
+                  : 'bg-bg border-white/[0.06] text-text hover:bg-white/5'
+              }`}
               title={info.label}
             >
               <span>{info.icon}</span>
@@ -165,23 +127,12 @@ export default function LogWindow() {
           )
         })}
       </div>
-      
-      <div style={{
-        height: 160,
-        overflowY: 'auto',
-        border: '1px solid var(--border)',
-        borderRadius: 4,
-        backgroundColor: 'var(--background)'
-      }}>
+
+      <div className="h-40 overflow-y-auto border border-white/[0.06] rounded bg-bg">
         {filteredLogs.length === 0 ? (
-          <div style={{
-            padding: 16,
-            textAlign: 'center',
-            color: 'var(--muted)',
-            fontSize: 12
-          }}>
-            {activeFilter === 'all' 
-              ? 'No activity yet...' 
+          <div className="p-4 text-center text-muted text-xs">
+            {activeFilter === 'all'
+              ? 'No activity yet...'
               : `No ${getCategoryInfo(activeFilter).label.toLowerCase()} activity yet...`}
           </div>
         ) : (

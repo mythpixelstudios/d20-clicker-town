@@ -33,7 +33,7 @@ export default function CharacterPanel() {
         <div>
           <GuidanceBanner />
           <PlayerCard/>
-          <div style={{height:12}}/>
+          <div className="h-3"/>
           <EquipmentPanel/>
         </div>
       )
@@ -75,17 +75,23 @@ export default function CharacterPanel() {
   const renderTabButton = (tab: CharacterTabProps) => {
     const isActive = activeSubTab === tab.id
     const isLocked = !tab.isUnlocked()
-    
+
     return (
-      <div key={tab.id} className="tab-wrapper">
+      <div key={tab.id} className="relative">
         <button
-          className={`tab-button ${isActive ? 'active' : ''} ${isLocked ? 'locked' : ''}`}
+          className={`relative px-4 py-2.5 text-sm font-medium transition-all border-b-2 ${
+            isActive
+              ? 'text-text border-gold bg-white/5'
+              : isLocked
+                ? 'text-muted/50 border-transparent cursor-not-allowed opacity-60'
+                : 'text-muted border-transparent hover:text-text hover:bg-white/5'
+          }`}
           onClick={() => !isLocked && setActiveSubTab(tab.id)}
           disabled={isLocked}
         >
           {tab.label}
-          {tab.hasAlert && !isLocked && <span className="alert-dot" />}
-          {isLocked && <span className="lock-icon">🔒</span>}
+          {tab.hasAlert && !isLocked && <span className="absolute top-1.5 right-1.5 w-2 h-2 bg-gold rounded-full animate-pulse" />}
+          {isLocked && <span className="ml-1.5 text-xs">🔒</span>}
         </button>
       </div>
     )
@@ -94,12 +100,12 @@ export default function CharacterPanel() {
   const activeTab = subTabs.find(tab => tab.id === activeSubTab) || subTabs[0]
 
   return (
-    <div className="character-panel">
-      <div className="character-sub-tabs">
-        <div className="tab-navigation">
+    <div>
+      <div>
+        <div className="flex gap-1 mb-3 border-b border-white/10 pb-0">
           {subTabs.map(renderTabButton)}
         </div>
-        <div className="tab-content">
+        <div>
           {activeTab.content}
         </div>
       </div>

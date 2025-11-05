@@ -84,10 +84,10 @@ export default function DebugOverlay() {
   
   if (!isVisible) {
     return (
-      <div className="debug-toggle">
-        <button 
+      <div className="fixed bottom-4 right-4 z-[9999]">
+        <button
           onClick={() => setIsVisible(true)}
-          className="debug-toggle-btn"
+          className="bg-panel border border-white/20 rounded-lg px-3 py-2 text-2xl cursor-pointer transition-all hover:bg-white/10 hover:scale-110 shadow-card"
           title="Show debug overlay (or press `)"
         >
           📊
@@ -95,36 +95,36 @@ export default function DebugOverlay() {
       </div>
     )
   }
-  
+
   return (
-    <div className="debug-overlay">
-      <div className="debug-header">
-        <h3>Debug Metrics</h3>
-        <button onClick={() => setIsVisible(false)} className="debug-close">×</button>
+    <div className="fixed bottom-4 right-4 bg-panel border border-white/20 rounded-lg p-4 min-w-[200px] z-[9999] shadow-[0_8px_24px_rgba(0,0,0,0.5)]">
+      <div className="flex justify-between items-center mb-3 pb-2 border-b border-white/10">
+        <h3 className="m-0 text-text text-sm font-bold">Debug Metrics</h3>
+        <button onClick={() => setIsVisible(false)} className="bg-transparent border-0 text-muted text-xl cursor-pointer p-0 leading-none hover:text-text transition-colors">×</button>
       </div>
-      <div className="debug-content">
-        <div className="debug-row">
-          <span>Gold/min:</span>
-          <span>{metrics.goldPerMin.toFixed(1)}</span>
+      <div className="flex flex-col gap-2">
+        <div className="flex justify-between items-center text-xs">
+          <span className="text-muted">Gold/min:</span>
+          <span className="text-text font-semibold">{metrics.goldPerMin.toFixed(1)}</span>
         </div>
-        <div className="debug-row">
-          <span>XP/min:</span>
-          <span>{metrics.xpPerMin.toFixed(1)}</span>
+        <div className="flex justify-between items-center text-xs">
+          <span className="text-muted">XP/min:</span>
+          <span className="text-text font-semibold">{metrics.xpPerMin.toFixed(1)}</span>
         </div>
-        <div className="debug-row">
-          <span>Auto DPS:</span>
-          <span>{metrics.currentDPS.toFixed(1)}</span>
+        <div className="flex justify-between items-center text-xs">
+          <span className="text-muted">Auto DPS:</span>
+          <span className="text-text font-semibold">{metrics.currentDPS.toFixed(1)}</span>
         </div>
-        <div className="debug-row">
-          <span>Zone:</span>
-          <span>{metrics.currentZone}</span>
+        <div className="flex justify-between items-center text-xs">
+          <span className="text-muted">Zone:</span>
+          <span className="text-text font-semibold">{metrics.currentZone}</span>
         </div>
-        <div className="debug-row">
-          <span>Difficulty:</span>
-          <span>{metrics.zoneDifficultyMultiplier.toFixed(2)}x</span>
+        <div className="flex justify-between items-center text-xs">
+          <span className="text-muted">Difficulty:</span>
+          <span className="text-text font-semibold">{metrics.zoneDifficultyMultiplier.toFixed(2)}x</span>
         </div>
       </div>
-      <div className="debug-footer">
+      <div className="mt-3 pt-2 border-t border-white/10 text-[10px] text-muted text-center">
         Press ` to toggle
       </div>
     </div>

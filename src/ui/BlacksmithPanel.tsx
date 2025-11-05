@@ -36,71 +36,53 @@ function CraftingItem({ equipment, canCraft, onCraft, craftingJob, successRate, 
     Math.max(0, (craftingJob.startTime + craftingJob.duration - Date.now()) / 1000) : 0
 
   return (
-    <div 
-      className="crafting-item"
+    <div
+      className={`bg-[#1b2130] border-2 rounded-lg p-3 transition-opacity ${canCraft && !craftingJob ? 'opacity-100' : 'opacity-60'}`}
       style={{
-        background: '#1b2130',
-        border: `2px solid ${rarityInfo[equipment.rarity].color}`,
-        borderRadius: '8px',
-        padding: '12px',
-        opacity: canCraft && !craftingJob ? 1 : 0.6
+        borderColor: rarityInfo[equipment.rarity].color
       }}
     >
-      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'start' }}>
+      <div className="flex justify-between items-start">
         <div>
-          <div style={{ 
-            color: rarityInfo[equipment.rarity].color, 
-            fontWeight: 'bold',
-            fontSize: '14px'
-          }}>
+          <div
+            className="font-bold text-sm"
+            style={{ color: rarityInfo[equipment.rarity].color }}
+          >
             {equipment.name}
           </div>
-          <div className="muted" style={{ fontSize: '11px', marginTop: '2px' }}>
+          <div className="text-muted text-[11px] mt-0.5">
             {equipment.slot} | Level {equipment.level}
           </div>
-          <div style={{ fontSize: '12px', marginTop: '4px' }}>
+          <div className="text-xs mt-1">
             {statsText}
           </div>
-          <div className="muted" style={{ fontSize: '11px', marginTop: '4px' }}>
+          <div className="text-muted text-[11px] mt-1">
             Success Rate: {Math.round(successRate * 100)}% | Time: {craftingTime}s
           </div>
         </div>
-        
-        <div style={{ textAlign: 'right' }}>
-          <div className="muted" style={{ fontSize: '11px' }}>
+
+        <div className="text-right">
+          <div className="text-muted text-[11px]">
             Cost: {recipe.gold}g{materialsList && ` + ${materialsList}`}
           </div>
-          
+
           {craftingJob ? (
-            <div style={{ marginTop: '8px' }}>
-              <div style={{ fontSize: '11px', color: '#6fe19a' }}>
+            <div className="mt-2">
+              <div className="text-[11px] text-green-400">
                 Crafting... {Math.round(timeRemaining)}s
               </div>
-              <div style={{
-                width: '80px',
-                height: '4px',
-                background: '#1a1f2a',
-                borderRadius: '2px',
-                marginTop: '4px',
-                overflow: 'hidden'
-              }}>
-                <div style={{
-                  width: `${progress}%`,
-                  height: '100%',
-                  background: '#6fe19a',
-                  transition: 'width 0.1s ease'
-                }} />
+              <div className="w-20 h-1 bg-[#1a1f2a] rounded-sm mt-1 overflow-hidden">
+                <div
+                  className="h-full bg-green-400 transition-all duration-100 ease-linear"
+                  style={{ width: `${progress}%` }}
+                />
               </div>
             </div>
           ) : (
-            <button 
-              disabled={!canCraft} 
+            <button
+              disabled={!canCraft}
               onClick={() => onCraft(equipment)}
-              style={{ 
-                marginTop: '8px',
-                padding: '4px 8px',
-                fontSize: '12px'
-              }}
+              className="mt-2 px-2 py-1 text-xs"
             >
               {willQueue ? 'Add to Queue' : 'Craft'}
             </button>
@@ -132,9 +114,9 @@ export const BlacksmithPanel = () => {
   
   if (blacksmithLevel === 0) {
     return (
-      <div className="card">
-        <h3>Blacksmith</h3>
-        <div className="muted">
+      <div className="bg-panel border border-white/[0.06] rounded-xl p-4 shadow-card">
+        <h3 className="m-0 mb-2 text-text">Blacksmith</h3>
+        <div className="text-muted">
           Build the Blacksmith to unlock equipment crafting!
         </div>
       </div>
@@ -167,45 +149,39 @@ export const BlacksmithPanel = () => {
   }
 
   return (
-    <div className="card">
-      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-        <h3>Blacksmith</h3>
-        <div className="muted">Level {blacksmithLevel}</div>
+    <div className="bg-panel border border-white/[0.06] rounded-xl p-4 shadow-card">
+      <div className="flex justify-between items-center mb-3">
+        <h3 className="m-0 text-text">Blacksmith</h3>
+        <div className="text-muted">Level {blacksmithLevel}</div>
       </div>
-      
-      <div style={{ display: 'flex', gap: '8px', marginBottom: '12px' }}>
-        <button 
+
+      <div className="flex gap-2 mb-3">
+        <button
           onClick={() => setSelectedCategory('weapon')}
-          style={{ 
-            background: selectedCategory === 'weapon' ? '#334155' : 'transparent',
-            border: '1px solid rgba(255,255,255,0.2)',
-            padding: '6px 12px',
-            fontSize: '12px'
-          }}
+          className={`px-3 py-1.5 text-xs border border-white/20 rounded transition-colors ${
+            selectedCategory === 'weapon' ? 'bg-slate-700' : 'bg-transparent hover:bg-white/5'
+          }`}
         >
           Weapons
         </button>
-        <button 
+        <button
           onClick={() => setSelectedCategory('armor')}
-          style={{ 
-            background: selectedCategory === 'armor' ? '#334155' : 'transparent',
-            border: '1px solid rgba(255,255,255,0.2)',
-            padding: '6px 12px',
-            fontSize: '12px'
-          }}
+          className={`px-3 py-1.5 text-xs border border-white/20 rounded transition-colors ${
+            selectedCategory === 'armor' ? 'bg-slate-700' : 'bg-transparent hover:bg-white/5'
+          }`}
         >
           Armor
         </button>
       </div>
-      
-      <div style={{ display: 'grid', gap: '8px', maxHeight: '400px', overflowY: 'auto' }}>
+
+      <div className="flex flex-col gap-2 max-h-[400px] overflow-y-auto">
         {availableEquipment.map(equipment => {
           const canCraft = canCraftEquipment(equipment, materials, gold, blacksmithLevel)
           const craftingJob = activeJobs.find(job => job.equipmentId === equipment.id)
           const successRate = calculateSuccessRate(equipment)
           const craftingTime = calculateCraftingTime(equipment)
           const willQueue = activeJobs.length >= maxActiveJobs
-          
+
           return (
             <CraftingItem
               key={equipment.id}
@@ -219,71 +195,51 @@ export const BlacksmithPanel = () => {
             />
           )
         })}
-        
+
         {availableEquipment.length === 0 && (
-          <div className="muted">
+          <div className="text-muted text-center py-4">
             No {selectedCategory === 'weapon' ? 'weapons' : 'armor pieces'} available at this level.
             Upgrade your blacksmith to unlock more recipes!
           </div>
         )}
       </div>
-      
+
       {/* Crafting Queue */}
       {queuedJobs.length > 0 && (
-        <div style={{ marginTop: '16px' }}>
-          <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '8px' }}>
-            <h4>Crafting Queue ({queuedJobs.length})</h4>
-            <button 
+        <div className="mt-4">
+          <div className="flex justify-between items-center mb-2">
+            <h4 className="m-0 text-text">Crafting Queue ({queuedJobs.length})</h4>
+            <button
               onClick={clearQueue}
-              style={{ 
-                padding: '4px 8px', 
-                fontSize: '11px',
-                backgroundColor: '#dc3545',
-                border: 'none',
-                borderRadius: '4px',
-                color: 'white'
-              }}
+              className="px-2 py-1 text-[11px] bg-red-600 hover:bg-red-700 border-none rounded text-white transition-colors"
             >
               Clear Queue
             </button>
           </div>
-          <div style={{ display: 'grid', gap: '4px', maxHeight: '200px', overflowY: 'auto' }}>
+          <div className="grid gap-1 max-h-[200px] overflow-y-auto">
             {queuedJobs.map((queuedJob, index) => {
               const equipment = equipmentTemplates.find(eq => eq.id === queuedJob.equipmentId)
               if (!equipment) return null
-              
+
               return (
-                <div 
+                <div
                   key={queuedJob.id}
-                  style={{
-                    background: '#1a1f2a',
-                    border: '1px solid #333',
-                    borderRadius: '4px',
-                    padding: '8px',
-                    fontSize: '12px',
-                    display: 'flex',
-                    justifyContent: 'space-between',
-                    alignItems: 'center'
-                  }}
+                  className="bg-[#1a1f2a] border border-[#333] rounded px-2 py-2 text-xs flex justify-between items-center"
                 >
                   <div>
-                    <span style={{ color: rarityInfo[equipment.rarity].color, fontWeight: 'bold' }}>
+                    <span
+                      className="font-bold"
+                      style={{ color: rarityInfo[equipment.rarity].color }}
+                    >
                       {equipment.name}
                     </span>
-                    <span className="muted" style={{ marginLeft: '8px' }}>
+                    <span className="text-muted ml-2">
                       #{index + 1} in queue
                     </span>
                   </div>
-                  <button 
+                  <button
                     onClick={() => handleRemoveFromQueue(queuedJob.id)}
-                    style={{ 
-                      padding: '2px 6px', 
-                      fontSize: '10px',
-                      backgroundColor: '#6c757d',
-                      border: 'none',
-                      borderRadius: '3px',
-                      color: 'white'
-                    }}
+                    className="px-1.5 py-0.5 text-[10px] bg-gray-600 hover:bg-gray-700 border-none rounded text-white transition-colors"
                   >
                     Remove
                   </button>
@@ -293,15 +249,15 @@ export const BlacksmithPanel = () => {
           </div>
         </div>
       )}
-      
+
       {/* Active Jobs Status */}
       {activeJobs.length > 0 && (
-        <div style={{ marginTop: '12px', padding: '8px', background: '#1a1f2a', borderRadius: '4px' }}>
-          <div style={{ fontSize: '12px', color: '#6fe19a', marginBottom: '4px' }}>
+        <div className="mt-3 p-2 bg-[#1a1f2a] rounded">
+          <div className="text-xs text-green-400 mb-1">
             Active Jobs: {activeJobs.length}/{maxActiveJobs}
           </div>
           {queuedJobs.length > 0 && (
-            <div style={{ fontSize: '11px', color: '#ffc107' }}>
+            <div className="text-[11px] text-yellow-400">
               Next in queue will start automatically when a slot opens
             </div>
           )}

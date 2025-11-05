@@ -30,7 +30,7 @@ class DamageNumberPool {
     
     if (!element && this.container) {
       element = document.createElement('div')
-      element.className = 'floating-damage'
+      element.className = 'absolute pointer-events-none z-[1000] transition-all duration-200 ease-out'
       this.container.appendChild(element)
     }
     
@@ -139,7 +139,7 @@ export default function DamageNumberContainer({ damageNumbers, onRemoveDamageNum
       element.style.textShadow = '1px 1px 2px rgba(0,0,0,0.8)'
       element.style.transition = 'all 0.2s ease-out'
       element.textContent = text
-      element.className = `floating-damage ${damageNumber.isCrit ? 'crit' : damageNumber.isMiss ? 'miss' : 'normal'} visible`
+      element.className = `absolute pointer-events-none z-[1000] transition-all duration-200 ease-out ${damageNumber.isCrit ? 'crit' : damageNumber.isMiss ? 'miss' : 'normal'} visible`
       
       // Trigger animation
       requestAnimationFrame(() => {
@@ -156,10 +156,9 @@ export default function DamageNumberContainer({ damageNumbers, onRemoveDamageNum
   }, [damageNumbers, onRemoveDamageNumber])
   
   return (
-    <div 
+    <div
       ref={containerRef}
-      className="damage-number-container" 
-      style={{ position: 'relative', pointerEvents: 'none' }}
+      className="relative pointer-events-none"
     >
       {/* Container for pooled elements */}
     </div>

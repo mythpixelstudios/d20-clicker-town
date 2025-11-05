@@ -1,5 +1,4 @@
 import React, { useEffect, useState } from 'react'
-import './Animations.css'
 
 interface Particle {
   id: string
@@ -62,11 +61,13 @@ export function LevelUpAnimation({ onComplete, message = 'Level Up!' }: Omit<Ani
   }, [onComplete])
   
   return (
-    <div className="animation-overlay">
-      <div className="level-up-text">
+    <div className="fixed top-0 left-0 w-screen h-screen pointer-events-none z-[9999] flex items-center justify-center">
+      <div className="text-6xl font-bold text-gold animate-level-up-pulse z-10 relative" style={{
+        textShadow: '0 0 10px rgba(255, 215, 0, 0.8), 0 0 20px rgba(255, 215, 0, 0.6), 0 0 30px rgba(255, 215, 0, 0.4), 2px 2px 4px rgba(0, 0, 0, 0.8)'
+      }}>
         ⭐ {message} ⭐
       </div>
-      <svg className="particle-canvas" viewBox="0 0 100 100">
+      <svg className="absolute w-full h-full top-0 left-0" viewBox="0 0 100 100">
         {particles.map(p => (
           <circle
             key={p.id}
@@ -124,11 +125,13 @@ export function CraftingCompleteAnimation({ onComplete, message = 'Crafting Comp
   }, [onComplete])
   
   return (
-    <div className="animation-overlay">
-      <div className="crafting-complete-text">
+    <div className="fixed top-0 left-0 w-screen h-screen pointer-events-none z-[9999] flex items-center justify-center">
+      <div className="text-5xl font-bold text-[#10b981] animate-crafting-bounce z-10 relative" style={{
+        textShadow: '0 0 10px rgba(16, 185, 129, 0.8), 0 0 20px rgba(16, 185, 129, 0.6), 2px 2px 4px rgba(0, 0, 0, 0.8)'
+      }}>
         🔨 {message} 🔨
       </div>
-      <svg className="particle-canvas" viewBox="0 0 100 100">
+      <svg className="absolute w-full h-full top-0 left-0" viewBox="0 0 100 100">
         {sparkles.map(p => (
           <g key={p.id}>
             <circle
@@ -162,10 +165,12 @@ export function AchievementAnimation({ onComplete, message = 'Achievement Unlock
   }, [onComplete])
   
   return (
-    <div className="animation-overlay">
-      <div className="achievement-banner">
-        <div className="achievement-icon">🏆</div>
-        <div className="achievement-text">{message}</div>
+    <div className="fixed top-0 left-0 w-screen h-screen pointer-events-none z-[9999] flex items-center justify-center">
+      <div className="bg-gradient-to-br from-purple-500 to-indigo-500 border-[3px] border-[#fbbf24] rounded-2xl px-12 py-6 flex items-center gap-5 animate-achievement-slide pointer-events-auto" style={{
+        boxShadow: '0 10px 40px rgba(139, 92, 246, 0.6), 0 0 0 4px rgba(251, 191, 36, 0.3), inset 0 2px 4px rgba(255, 255, 255, 0.3)'
+      }}>
+        <div className="text-5xl animate-achievement-rotate">🏆</div>
+        <div className="text-2xl font-bold text-white" style={{ textShadow: '2px 2px 4px rgba(0, 0, 0, 0.5)' }}>{message}</div>
       </div>
     </div>
   )

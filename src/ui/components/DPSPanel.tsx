@@ -53,40 +53,44 @@ export default function DPSPanel() {
   }, projectedValues[0])
   
   return (
-    <div className="dps-panel">
-      <div className="dps-header">
-        <h3>DPS Overview</h3>
+    <div className="bg-panel border border-white/[0.06] rounded-xl p-4 shadow-card">
+      <div className="mb-3">
+        <h3 className="m-0 text-text text-base">DPS Overview</h3>
       </div>
-      <div className="dps-stats">
-        <div className="dps-section">
-          <div className="dps-section-title">Current</div>
-          <div className="dps-row">
-            <span className="dps-label">Click Damage:</span>
-            <span className="dps-value">{clickDamage.toFixed(1)}</span>
+      <div className="flex flex-col gap-3">
+        <div className="bg-black/20 rounded-lg p-3">
+          <div className="text-xs font-bold text-muted uppercase mb-2 tracking-wide">Current</div>
+          <div className="flex justify-between items-center mb-1.5 text-sm">
+            <span className="text-muted">Click Damage:</span>
+            <span className="text-text font-semibold">{clickDamage.toFixed(1)}</span>
           </div>
-          <div className="dps-row">
-            <span className="dps-label">Auto DPS:</span>
-            <span className="dps-value">{autoDPS.toFixed(1)}</span>
-            <span className="dps-breakdown">({autoDamage.toFixed(1)} × {autoAPS.toFixed(2)}/s)</span>
+          <div className="flex justify-between items-center mb-1.5 text-sm">
+            <span className="text-muted">Auto DPS:</span>
+            <div className="flex items-center gap-2">
+              <span className="text-text font-semibold">{autoDPS.toFixed(1)}</span>
+              <span className="text-[10px] text-muted">({autoDamage.toFixed(1)} × {autoAPS.toFixed(2)}/s)</span>
+            </div>
           </div>
-          <div className="dps-row total">
-            <span className="dps-label">Total Auto DPS:</span>
-            <span className="dps-value">{totalDPS.toFixed(1)}</span>
+          <div className="flex justify-between items-center pt-2 border-t border-white/10 text-sm">
+            <span className="text-text font-bold">Total Auto DPS:</span>
+            <span className="text-gold font-bold">{totalDPS.toFixed(1)}</span>
           </div>
         </div>
-        
+
         {statPoints > 0 && (
-          <div className="dps-section">
-            <div className="dps-section-title">Best Next Upgrade</div>
-            <div className="dps-row projection highlight">
-              <span className="dps-label">{bestUpgrade.label}:</span>
-              <span className="dps-value">
-                {bestUpgrade.clickDamage.toFixed(1)} click 
-                {bestUpgrade.autoAPS > 0 && ` / ${(bestUpgrade.autoDamage * bestUpgrade.autoAPS).toFixed(1)} DPS`}
-              </span>
-              <span className="dps-gain">
-                (+{(bestUpgrade.clickDamage - clickDamage).toFixed(1)})
-              </span>
+          <div className="bg-green-500/10 border border-green-500/20 rounded-lg p-3">
+            <div className="text-xs font-bold text-muted uppercase mb-2 tracking-wide">Best Next Upgrade</div>
+            <div className="flex justify-between items-center text-sm">
+              <span className="text-text font-medium">{bestUpgrade.label}:</span>
+              <div className="flex items-center gap-2">
+                <span className="text-text font-semibold">
+                  {bestUpgrade.clickDamage.toFixed(1)} click
+                  {bestUpgrade.autoAPS > 0 && ` / ${(bestUpgrade.autoDamage * bestUpgrade.autoAPS).toFixed(1)} DPS`}
+                </span>
+                <span className="text-green-500 font-bold text-xs">
+                  (+{(bestUpgrade.clickDamage - clickDamage).toFixed(1)})
+                </span>
+              </div>
             </div>
           </div>
         )}

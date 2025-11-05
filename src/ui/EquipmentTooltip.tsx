@@ -88,115 +88,126 @@ export default function EquipmentTooltip({ equipment, onEquip, onBreakdown, onCl
   const breakdownRewards = getBreakdownRewards()
 
   return (
-    <div className="equipment-tooltip">
-      <div className="tooltip-header">
-        <div className="equipment-name" style={{ color: rarity.color }}>
-          {equipment.name}
+    <div className="fixed inset-0 bg-black/80 flex items-center justify-center z-[10000] backdrop-blur-sm">
+      <div className="bg-panel border-2 rounded-xl p-4 shadow-[0_8px_32px_rgba(0,0,0,0.5)] max-w-md w-full mx-4 relative" style={{ borderColor: rarity.color }}>
+        <div className="mb-4 pb-3 border-b border-white/10">
+          <div className="text-lg font-bold mb-1" style={{ color: rarity.color }}>
+            {equipment.name}
+          </div>
+          <div className="text-sm text-muted">{slotNames[equipment.slot]} • Level {equipment.level}</div>
+          <div className="text-sm font-bold mt-1" style={{ color: rarity.color }}>
+            {equipment.rarity.charAt(0).toUpperCase() + equipment.rarity.slice(1)}
+          </div>
         </div>
-        <div className="equipment-type">{slotNames[equipment.slot]} • Level {equipment.level}</div>
-        <div className="equipment-rarity" style={{ color: rarity.color }}>
-          {equipment.rarity.charAt(0).toUpperCase() + equipment.rarity.slice(1)}
-        </div>
-      </div>
 
-      <div className="tooltip-section">
-        <div className="section-title">Stats</div>
-        <div className="stats-list">
-          {Object.entries(statNames).map(([statKey, statName]) => {
-            const comparison = getStatComparison(statKey as keyof typeof statNames)
-            if (comparison.newValue === 0) return null
-            
-            return (
-              <div key={statKey} className="stat-row">
-                <span className="stat-name">{statName}:</span>
-                <span className="stat-value">+{comparison.newValue}</span>
-                {comparison.difference !== 0 && (
-                  <span 
-                    className={`stat-comparison ${comparison.isUpgrade ? 'upgrade' : 'downgrade'}`}
-                  >
-                    ({comparison.difference > 0 ? '+' : ''}{comparison.difference})
+        <div className="mb-4">
+          <div className="text-xs font-bold text-gold uppercase mb-2">Stats</div>
+          <div className="space-y-1">
+            {Object.entries(statNames).map(([statKey, statName]) => {
+              const comparison = getStatComparison(statKey as keyof typeof statNames)
+              if (comparison.newValue === 0) return null
+
+              return (
+                <div key={statKey} className="flex justify-between items-center text-sm">
+                  <span className="text-muted">{statName}:</span>
+                  <div className="flex items-center gap-2">
+                    <span className="text-text">+{comparison.newValue}</span>
+                    {comparison.difference !== 0 && (
+                      <span className={`text-xs font-bold ${comparison.isUpgrade ? 'text-green-400' : 'text-red-400'}`}>
+                        ({comparison.difference > 0 ? '+' : ''}{comparison.difference})
+                      </span>
+                    )}
+                    {!currentEquipped && comparison.newValue > 0 && (
+                      <span className="text-xs font-bold text-green-400">
+                        (+{comparison.newValue})
+                      </span>
+                    )}
+                  </div>
+                </div>
+              )
+            })}
+          </div>
+        </div>
+
+        {equipment.affixes && equipment.affixes.length > 0 && (
+          <div className="mb-4">
+            <div className="text-xs font-bold text-purple uppercase mb-2">Special Properties</div>
+            <div className="space-y-1">
+              {equipment.affixes.map((affix) => (
+                <div key={affix.id} className="text-sm bg-purple/10 border border-purple/30 rounded px-2 py-1">
+                  <span className="text-purple font-bold">{affix.name}:</span>
+                  <span className="text-text ml-2">
+                    {Object.entries(affix.stats).map(([statKey, value]) => (
+                      <span key={statKey}>
+                        +{value}{statKey.includes('Chance') || statKey.includes('Bonus') ? '%' : ''} {statKey}
+                      </span>
+                    ))}
                   </span>
-                )}
-                {!currentEquipped && comparison.newValue > 0 && (
-                  <span className="stat-comparison upgrade">
-                    (+{comparison.newValue})
-                  </span>
-                )}
-              </div>
-            )
-          })}
-        </div>
-      </div>
-
-      {equipment.affixes && equipment.affixes.length > 0 && (
-        <div className="tooltip-section">
-          <div className="section-title">Special Properties</div>
-          <div className="affixes-list">
-            {equipment.affixes.map((affix) => (
-              <div key={affix.id} className={`affix-item ${affix.tier}-affix`}>
-                <span className="affix-name">{affix.name}:</span>
-                <span className="affix-value">
-                  {Object.entries(affix.stats).map(([statKey, value]) => (
-                    <span key={statKey}>
-                      +{value}{statKey.includes('Chance') || statKey.includes('Bonus') ? '%' : ''} {statKey}
-                    </span>
-                  ))}
-                </span>
-              </div>
-            ))}
+                </div>
+              ))}
+            </div>
           </div>
-        </div>
-      )}
+        )}
 
-      {currentEquipped && (
-        <div className="tooltip-section">
-          <div className="section-title">Currently Equipped</div>
-          <div className="current-equipment">
-            <span style={{ color: rarityInfo[currentEquipped.rarity as keyof typeof rarityInfo].color }}>
-              {currentEquipped.name}
-            </span>
-            <span className="muted"> (Level {currentEquipped.level})</span>
+        {currentEquipped && (
+          <div className="mb-4">
+            <div className="text-xs font-bold text-muted uppercase mb-2">Currently Equipped</div>
+            <div className="text-sm">
+              <span style={{ color: rarityInfo[currentEquipped.rarity as keyof typeof rarityInfo].color }}>
+                {currentEquipped.name}
+              </span>
+              <span className="text-muted"> (Level {currentEquipped.level})</span>
+            </div>
           </div>
-        </div>
-      )}
+        )}
 
-      {canBreakdown && (
-        <div className="tooltip-section">
-          <div className="section-title">Breakdown Rewards</div>
-          <div className="breakdown-rewards">
-            {Object.entries(breakdownRewards).map(([material, amount]) => (
-              <div key={material} className="reward-item">
-                <span className="material-name">{material}:</span>
-                <span className="material-amount">+{amount}</span>
-              </div>
-            ))}
+        {canBreakdown && (
+          <div className="mb-4">
+            <div className="text-xs font-bold text-muted uppercase mb-2">Breakdown Rewards</div>
+            <div className="flex flex-wrap gap-2">
+              {Object.entries(breakdownRewards).map(([material, amount]) => (
+                <div key={material} className="flex-1 min-w-[100px] text-xs bg-black/30 rounded px-2 py-1 flex justify-between">
+                  <span className="text-muted capitalize">{material}:</span>
+                  <span className="text-gold font-bold">+{amount}</span>
+                </div>
+              ))}
+            </div>
           </div>
-        </div>
-      )}
+        )}
 
-      <div className="tooltip-actions">
-        {onEquip && (
-          <button className="equip-button" onClick={onEquip}>
-            {currentEquipped ? 'Replace Equipment' : 'Equip'}
+        <div className="flex gap-2">
+          {onEquip && (
+            <button
+              className="flex-1 bg-gradient-to-r from-gold to-yellow-600 text-bg font-bold py-2 px-4 rounded cursor-pointer transition-all hover:scale-105"
+              onClick={onEquip}
+            >
+              {currentEquipped ? 'Replace Equipment' : 'Equip'}
+            </button>
+          )}
+          {onBreakdown && canBreakdown && (
+            <button
+              className="flex-1 bg-red-600 hover:bg-red-700 text-white font-bold py-2 px-4 rounded cursor-pointer transition-colors"
+              onClick={onBreakdown}
+            >
+              Break Down
+            </button>
+          )}
+          {!canBreakdown && (
+            <div className="flex-1 text-center py-2">
+              <span className="text-muted text-xs">Unlock Blacksmith to break down items</span>
+            </div>
+          )}
+        </div>
+
+        {onClose && (
+          <button
+            className="absolute top-2 right-2 w-8 h-8 bg-white/10 hover:bg-white/20 text-text rounded flex items-center justify-center transition-colors"
+            onClick={onClose}
+          >
+            ✕
           </button>
         )}
-        {onBreakdown && canBreakdown && (
-          <button className="breakdown-button" onClick={onBreakdown}>
-            Break Down
-          </button>
-        )}
-        {!canBreakdown && (
-          <div className="breakdown-locked">
-            <span className="muted">Unlock Blacksmith to break down items</span>
-          </div>
-        )}
       </div>
-
-      {onClose && (
-        <button className="close-button" onClick={onClose}>
-          ✕
-        </button>
-      )}
     </div>
   )
 }

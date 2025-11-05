@@ -4,7 +4,6 @@ import { useCombat } from '@/state/combatStore'
 import { useTown } from '@/state/townStore'
 import { useZoneProgression } from '@/state/zoneProgressionStore'
 import { computeClickDamage } from '@/systems/math'
-import './GuidanceBanner.css'
 
 interface GuidanceMessage {
   id: string
@@ -130,14 +129,14 @@ export default function GuidanceBanner() {
   if (!activeMessage) {
     return null
   }
-  
+
   return (
-    <div className="guidance-banner">
-      <div className="guidance-content">
-        <span className="guidance-message">{activeMessage.message}</span>
+    <div className="sticky top-0 z-[100] bg-gradient-to-br from-blue-500 to-blue-600 text-white px-4 py-3 rounded-b-lg shadow-[0_2px_8px_rgba(0,0,0,0.2)] mb-3 animate-slide-in">
+      <div className="flex items-center justify-between gap-3 max-w-full">
+        <span className="flex-1 text-[0.9em] leading-[1.4] font-medium">{activeMessage.message}</span>
         {activeMessage.dismissable && (
-          <button 
-            className="guidance-dismiss"
+          <button
+            className="bg-white/20 border-0 text-white w-6 h-6 rounded-full cursor-pointer text-base font-bold flex items-center justify-center flex-shrink-0 transition-all duration-200 hover:bg-white/30 hover:scale-110"
             onClick={() => handleDismiss(activeMessage.id)}
             title="Dismiss this tip"
           >
