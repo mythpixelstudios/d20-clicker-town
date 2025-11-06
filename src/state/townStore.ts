@@ -3,6 +3,7 @@ import { persist } from 'zustand/middleware'
 import { useEconomy } from './economyStore'
 import { useChar } from './charStore'
 import { buildings, getBuilding, getCostForLevel, isBuildingUnlocked } from '@/data/buildings'
+import { trackBuildingUpgrade } from '@/systems/storyQuestTracking'
 import type { Building } from '@/data/buildings'
 
 export type TownBuilding = {
@@ -86,16 +87,19 @@ export const useTown = create<TownState>()(persist((set, get) => ({
     }
     
     // Upgrade building
-    const newBuildings = state.buildings.map(b => 
+    const newBuildings = state.buildings.map(b =>
       b.id === buildingId ? { ...b, level: b.level + 1 } : b
     )
-    
+
     // Log the upgrade
     const newLevel = (townBuilding.level || 0) + 1
     import('./logStore').then(({ logTownUpgrade }) => {
       logTownUpgrade(buildingData.name, newLevel)
     })
-    
+
+    // Track story quest progress
+    trackBuildingUpgrade(buildingId, newLevel)
+
     return { buildings: newBuildings }
   }),
 

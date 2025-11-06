@@ -79,7 +79,7 @@ export default function DamageNumberContainer({ damageNumbers, onRemoveDamageNum
   useEffect(() => {
     const currentIds = new Set(damageNumbers.map(dn => dn.id))
     const timers: number[] = []
-    
+
     // Remove old elements
     activeElementsRef.current.forEach((element, id) => {
       if (!currentIds.has(id)) {
@@ -87,67 +87,83 @@ export default function DamageNumberContainer({ damageNumbers, onRemoveDamageNum
         activeElementsRef.current.delete(id)
       }
     })
-    
+
     // Add or update elements
     damageNumbers.forEach(damageNumber => {
+      const isNewElement = !activeElementsRef.current.has(damageNumber.id)
       let element = activeElementsRef.current.get(damageNumber.id)
-      
+
       if (!element) {
         element = damagePool.acquire()
         activeElementsRef.current.set(damageNumber.id, element)
-        
+      }
+
+      // Only schedule removal for new elements
+      if (isNewElement) {
         // Schedule removal with simpler structure
         const fadeTimer = window.setTimeout(() => {
           const el = activeElementsRef.current.get(damageNumber.id)
-          if (el) el.classList.add('fading')
-        }, 1000)
-        
+          if (el) {
+            el.style.opacity = '0'
+            el.style.transform = 'translateY(-100px)'
+          }
+        }, 800)
+
         const removeTimer = window.setTimeout(() => {
           onRemoveDamageNumber(damageNumber.id)
         }, 1200)
-        
+
         timers.push(fadeTimer, removeTimer)
       }
       
-      // Determine color and text
-      let color: string
-      let text: string
-      if (damageNumber.isMiss) {
-        color = '#888'
-        text = 'MISS'
-      } else if (damageNumber.damage <= 0) {
-        color = '#888'
-        text = '0 dmg'
-      } else if (damageNumber.isCrit) {
-        color = '#ff6b35'
-        text = `${Math.ceil(damageNumber.damage)} dmg! 🎯`
-      } else {
-        color = '#fff'
-        text = `${Math.ceil(damageNumber.damage)} dmg`
-      }
-      
-      // Update element
-      element.style.display = 'block'
-      element.style.left = '360px'
-      element.style.top = '150px'
-      element.style.position = 'absolute'
-      element.style.pointerEvents = 'none'
-      element.style.zIndex = '1000'
-      element.style.fontSize = damageNumber.isCrit ? '24px' : '18px'
-      element.style.fontWeight = damageNumber.isCrit || damageNumber.isMiss ? 'bold' : 'normal'
-      element.style.color = color
-      element.style.textShadow = '1px 1px 2px rgba(0,0,0,0.8)'
-      element.style.transition = 'all 0.2s ease-out'
-      element.textContent = text
-      element.className = `absolute pointer-events-none z-[1000] transition-all duration-200 ease-out ${damageNumber.isCrit ? 'crit' : damageNumber.isMiss ? 'miss' : 'normal'} visible`
-      
-      // Trigger animation
-      requestAnimationFrame(() => {
-        if (element) {
-          element.style.transform = 'translateY(-80px)'
-          element.style.opacity = '1'
+      // Only update and animate new elements
+      if (isNewElement) {
+        // Determine color and text
+        let color: string
+        let text: string
+        if (damageNumber.isMiss) {
+          color = '#888'
+          text = 'MISS'
+        } else if (damageNumber.damage <= 0) {
+          color = '#888'
+          text = '0 dmg'
+        } else if (damageNumber.isCrit) {
+          color = '#ff6b35'
+          text = `${Math.ceil(damageNumber.damage)} dmg! 🎯`
+        } else {
+          color = '#fff'
+          text = `${Math.ceil(damageNumber.damage)} dmg`
         }
-      })
+
+        // Update element
+        element.style.display = 'block'
+        element.style.left = '360px'
+        element.style.top = '150px'
+        element.style.position = 'absolute'
+        element.style.pointerEvents = 'none'
+        element.style.zIndex = '1000'
+        element.style.fontSize = damageNumber.isCrit ? '24px' : '18px'
+        element.style.fontWeight = damageNumber.isCrit || damageNumber.isMiss ? 'bold' : 'normal'
+        element.style.color = color
+        element.style.textShadow = '1px 1px 2px rgba(0,0,0,0.8)'
+        element.style.transition = 'all 0.6s ease-out'
+        element.textContent = text
+        element.className = `absolute pointer-events-none z-[1000] ${damageNumber.isCrit ? 'crit' : damageNumber.isMiss ? 'miss' : 'normal'}`
+
+        // Reset transform and opacity for new animation
+        element.style.transform = 'translateY(0px)'
+        element.style.opacity = '0'
+
+        // Trigger animation
+        requestAnimationFrame(() => {
+          requestAnimationFrame(() => {
+            if (element) {
+              element.style.transform = 'translateY(-80px)'
+              element.style.opacity = '1'
+            }
+          })
+        })
+      }
     })
     
     return () => {

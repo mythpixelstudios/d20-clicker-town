@@ -1,22 +1,23 @@
 import { create } from 'zustand'
 import { persist } from 'zustand/middleware'
-import { 
-  generateDrops, 
+import {
+  generateDrops,
   computeClickDamage,
   makeAttackRoll,
   calculateAttackBonus
 } from '@/systems/math'
 import { applyMetaUpgrades } from '@/systems/metaUpgrades'
+import { trackMonsterKill, trackBossDefeat } from '@/systems/storyQuestTracking'
 import { useChar } from './charStore'
 import { useEconomy } from './economyStore'
 import { useZoneProgression } from './zoneProgressionStore'
 import { useMonsterCompendium } from './monsterCompendiumStore'
 import { useLog } from './logStore'
 import { getZone } from '@/data/zones'
-import { 
-  getRandomMonster, 
-  getBoss, 
-  calculateMonsterHP, 
+import {
+  getRandomMonster,
+  getBoss,
+  calculateMonsterHP,
   calculateBossHP,
   applyAffixesToMonster,
   calculateAffixRewards,
@@ -287,13 +288,20 @@ export const useCombat = create<CombatState>()(persist((set, get) => ({
     
     // Give XP
     useChar.getState().addXP(xpGained)
-    
+
+    // Track story quest progress
+    if (state.isBoss) {
+      trackBossDefeat(currentZone)
+    } else {
+      trackMonsterKill(state.monsterName)
+    }
+
     // Handle progression
     if (state.isBoss) {
       // Boss defeated - clear the zone and show zone selection
       zoneProgression.clearZone(currentZone)
       logZoneUpgrade(currentZone)
-      
+
       // Don't auto-advance, let player choose next zone
       // The zone selection screen will appear
     } else {

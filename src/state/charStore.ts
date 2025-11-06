@@ -2,6 +2,7 @@ import { create } from 'zustand'
 import { persist } from 'zustand/middleware'
 import { xpForLevel } from '@/systems/math'
 import { calculateBuildingEffects } from '@/data/buildings'
+import { trackLevelUp } from '@/systems/storyQuestTracking'
 import { useTown } from './townStore'
 import type { Equipment, EquipmentSlot, EquipmentStats } from '@/data/equipment'
 import { logLevelUp } from './logStore'
@@ -254,8 +255,10 @@ export const useChar = create<CharacterState>()(persist((set, get) => ({
     // Log level ups
     if (levelsGained > 0) {
       logLevelUp(level, skillPointsGained)  // Changed from statPointsGained
+      // Track story quest progress
+      trackLevelUp(level)
     }
-    
+
     set({ xp, level, skillPoints: skillPoints + skillPointsGained })  // Changed from statPoints
   },
 

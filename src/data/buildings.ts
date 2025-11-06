@@ -4,6 +4,7 @@ export interface Building {
   description: string
   maxLevel: number
   category: 'production' | 'military' | 'utility' | 'research'
+  representativeId?: string // Character ID from characters.ts who represents this building
   unlockRequirements?: {
     level?: number
     buildings?: Array<{ id: string; level: number }>
@@ -37,9 +38,10 @@ export const buildings: Building[] = [
     description: 'The heart of your settlement. Upgrading unlocks new buildings and opportunities.',
     maxLevel: 20,
     category: 'utility',
+    representativeId: 'mayor_aldric',
     costs: Array.from({ length: 20 }, (_, i) => ({
       gold: 100 * Math.pow(2.0, i), // INCREASED: was 50 * 1.8^i, now 100 * 2.0^i
-      materials: i === 0 ? {} : { 
+      materials: i === 0 ? {} : {
         wood: Math.floor(5 * Math.pow(1.7, i)), // INCREASED: was 2 * 1.5^i
         ...(i > 3 ? { stone: Math.floor(3 * Math.pow(1.6, i - 3)) } : {}) // INCREASED: was 1 * 1.4^i
       }
@@ -57,6 +59,7 @@ export const buildings: Building[] = [
     description: 'Processes wood and increases material gathering efficiency',
     maxLevel: 15,
     category: 'production',
+    representativeId: 'foreman_grok',
     unlockRequirements: {
       buildings: [{ id: 'town_hall', level: 1 }]
     },
@@ -87,6 +90,7 @@ export const buildings: Building[] = [
     description: 'Trains soldiers who assist in combat',
     maxLevel: 18,
     category: 'military',
+    representativeId: 'captain_thorne',
     unlockRequirements: {
       buildings: [{ id: 'town_hall', level: 1 }]
     },
@@ -114,6 +118,7 @@ export const buildings: Building[] = [
     description: 'Forges weapons and armor, increasing damage output',
     maxLevel: 20,
     category: 'production',
+    representativeId: 'blacksmith_gareth',
     unlockRequirements: {
       buildings: [
         { id: 'town_hall', level: 2 },
@@ -125,7 +130,7 @@ export const buildings: Building[] = [
         gold: 100 * Math.pow(2.1, i) // INCREASED: was 50 * 1.9^i
       }
       if (i > 2) {
-        cost.materials = { 
+        cost.materials = {
           iron: Math.floor(5 * Math.pow(1.9, i)), // INCREASED: was 2 * 1.7^i
           wood: Math.floor(2 * Math.pow(1.5, i)) // INCREASED: was 0.4 * 1.3^i
         }
@@ -188,6 +193,7 @@ export const buildings: Building[] = [
     description: 'Extracts valuable minerals and gems from the earth',
     maxLevel: 12,
     category: 'production',
+    representativeId: 'miner_borin',
     unlockRequirements: {
       buildings: [
         { id: 'town_hall', level: 4 },
@@ -239,6 +245,7 @@ export const buildings: Building[] = [
     description: 'Increases gold income from all sources',
     maxLevel: 12,
     category: 'utility',
+    representativeId: 'merchant_lyra',
     unlockRequirements: {
       buildings: [{ id: 'town_hall', level: 5 }]
     },
@@ -261,6 +268,7 @@ export const buildings: Building[] = [
     description: 'Repository of knowledge that unlocks advanced technologies',
     maxLevel: 10,
     category: 'research',
+    representativeId: 'scholar_elara',
     unlockRequirements: {
       buildings: [{ id: 'town_hall', level: 6 }]
     },
@@ -319,6 +327,7 @@ export const buildings: Building[] = [
     description: 'Sacred building that increases experience gain',
     maxLevel: 8,
     category: 'utility',
+    representativeId: 'priest_aldwin',
     unlockRequirements: {
       buildings: [{ id: 'town_hall', level: 8 }],
       materials: { crystal: 5 }

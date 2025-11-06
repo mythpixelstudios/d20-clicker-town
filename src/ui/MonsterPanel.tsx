@@ -37,11 +37,11 @@ const MonsterPanel = () => {
   // Add damage number when click happens
   const addDamageNumber = useCallback((damage: number, isCrit: boolean = false, isMiss: boolean = false) => {
     console.log('addDamageNumber called with:', { damage, isCrit, isMiss })
-    
+
     // Use fixed position for testing
     const x = 300 + (Math.random() - 0.5) * 40
     const y = 300 + (Math.random() - 0.5) * 20
-    
+
     const damageNumber: DamageNumber = {
       id: Date.now() + Math.random().toString(),
       damage,
@@ -51,7 +51,7 @@ const MonsterPanel = () => {
       y,
       timestamp: Date.now()
     }
-    
+
     console.log('Adding damage number:', damageNumber)
     setDamageNumbers(prev => {
       const newNumbers = [...prev, damageNumber]
@@ -59,17 +59,22 @@ const MonsterPanel = () => {
       return newNumbers
     })
   }, [])
-  
+
   // Remove damage number after animation
   const removeDamageNumber = useCallback((id: string) => {
-    setDamageNumbers(prev => prev.filter(num => num.id !== id))
+    console.log('Removing damage number:', id)
+    setDamageNumbers(prev => {
+      const filtered = prev.filter(num => num.id !== id)
+      console.log('Damage numbers after removal:', prev.length, '->', filtered.length)
+      return filtered
+    })
   }, [])
 
   // Set up damage callback
   useEffect(() => {
     console.log('Setting damage callback in useEffect')
     setDamageCallback(addDamageNumber)
-  }, [])
+  }, [addDamageNumber, setDamageCallback])
 
   // Auto-attack system
   useEffect(() => {

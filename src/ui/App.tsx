@@ -14,12 +14,15 @@ import TabPanel from '@/ui/TabPanel'
 import ResourceBar from '@/ui/components/ResourceBar'
 import OfflineProgressPopup from '@/ui/components/OfflineProgressPopup'
 import AudioControls from '@/ui/components/AudioControls'
+import DialogueOverlay from '@/ui/components/DialogueOverlay'
+import BuildingDetailPanel from '@/ui/components/BuildingDetailPanel'
 import { ToastNotification } from '@/ui/components/Toast'
 import { useToast } from '@/state/toastStore'
 import { useZoneProgression } from '@/state/zoneProgressionStore'
 import { useCombat } from '@/state/combatStore'
 import { useChar } from '@/state/charStore'
 import { useTown } from '@/state/townStore'
+import { useStory } from '@/state/storyStore'
 import { useAchievements } from '@/state/achievementStore'
 import { useDailyQuests } from '@/state/dailyQuestStore'
 import { useMonsterCompendium } from '@/state/monsterCompendiumStore'
@@ -51,6 +54,15 @@ export default function App(){
       useCombat.getState().init()
       // Start analytics session
       startSession()
+
+      // Initialize story - start Chapter 1 if not already started
+      const story = useStory.getState()
+      if (story.completedChapters.length === 0 && !story.activeChapter) {
+        // Delay story start slightly to let game initialize
+        setTimeout(() => {
+          story.startChapter('chapter_1')
+        }, 2000)
+      }
     }
   }, [isGameInitialized, startSession])
   
@@ -288,6 +300,10 @@ export default function App(){
           onClaim={handleClaimOfflineProgress}
         />
       )}
+
+      {/* Story System Components */}
+      <DialogueOverlay />
+      <BuildingDetailPanel />
 
       {/* Toast Notifications */}
       <div className="fixed top-5 right-5 z-[10000] flex flex-col gap-2.5 pointer-events-none">
