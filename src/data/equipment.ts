@@ -841,15 +841,31 @@ export function generateRandomEquipment(zone: number, forceRarity?: EquipmentRar
   if (availableEquipment.length === 0) return null
   
   const template = availableEquipment[Math.floor(Math.random() * availableEquipment.length)]
-  
-  // Create a copy with slight stat variations for dropped items
-  const statVariation = 0.2 // 20% variation
+
+  // Create a copy with stat variations based on rarity
+  // Common items have no variation (they stack)
+  // Uncommon+ items have increasing variation to make each drop unique
+  const statVariationByRarity = {
+    common: 0,        // No variation - these stack
+    uncommon: 0.25,   // 25% variation
+    rare: 0.35,       // 35% variation
+    epic: 0.45,       // 45% variation
+    legendary: 0.55   // 55% variation
+  }
+
+  const statVariation = statVariationByRarity[selectedRarity]
   const variatedStats: EquipmentStats = {}
-  
+
   for (const [stat, value] of Object.entries(template.stats)) {
     if (typeof value === 'number') {
-      const variation = 1 + (Math.random() - 0.5) * statVariation
-      variatedStats[stat as keyof EquipmentStats] = Math.max(1, Math.round(value * variation))
+      if (statVariation === 0) {
+        // No variation for common items
+        variatedStats[stat as keyof EquipmentStats] = value
+      } else {
+        // Apply variation for uncommon+ items
+        const variation = 1 + (Math.random() - 0.5) * statVariation
+        variatedStats[stat as keyof EquipmentStats] = Math.max(1, Math.round(value * variation))
+      }
     }
   }
   

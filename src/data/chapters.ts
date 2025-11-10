@@ -76,47 +76,47 @@ export const chapters: Chapter[] = [
   {
     id: 'chapter_1',
     title: 'A New Beginning',
-    description: 'Your journey starts in a small settlement. The mayor has high hopes for this town.',
+    description: 'Your journey starts in a small settlement. The mayor desperately needs your help.',
     order: 1,
     introDialogue: [
       {
         characterId: 'mayor_aldric',
-        text: 'Welcome, adventurer! I am Aldric, mayor of this humble settlement.',
-        emotion: 'happy'
-      },
-      {
-        characterId: 'mayor_aldric',
-        text: 'We\'ve been plagued by monsters from the nearby forest. We need someone brave to defend us.',
+        text: 'Oh, thank the gods you\'re here! I am Aldric, mayor of this settlement... or what\'s left of it.',
         emotion: 'worried'
       },
       {
         characterId: 'mayor_aldric',
-        text: 'In return, we\'ll help you grow stronger. Together, we can build something great here!',
-        emotion: 'excited',
+        text: 'Monsters from the nearby forest have been attacking us relentlessly. Our defenses are crumbling!',
+        emotion: 'worried'
+      },
+      {
+        characterId: 'mayor_aldric',
+        text: 'Please, we need your help! If you can defeat just 10 of these creatures, it would give us time to regroup.',
+        emotion: 'worried',
         choices: [
           {
-            text: 'I\'ll help defend the town.',
-            effects: { unlockQuest: 'first_defense', addGold: 50 }
+            text: 'I\'ll help defend the town!',
+            effects: { unlockQuest: 'first_defense', addGold: 25 }
           },
           {
-            text: 'Tell me more about this place.',
+            text: 'What happened here?',
             nextDialogueIndex: 3
           }
         ]
       },
       {
         characterId: 'mayor_aldric',
-        text: 'This settlement was founded just a few months ago. We have big dreams, but we need protection to thrive.',
-        emotion: 'neutral'
+        text: 'This settlement was founded with such hope... but the monsters came without warning. Our Town Hall is damaged, our people are scared.',
+        emotion: 'sad'
       },
       {
         characterId: 'mayor_aldric',
-        text: 'Will you help us?',
-        emotion: 'hopeful',
+        text: 'We need a hero. Will you help us?',
+        emotion: 'worried',
         choices: [
           {
-            text: 'Yes, I\'ll protect the town.',
-            effects: { unlockQuest: 'first_defense', addGold: 50 }
+            text: 'Yes, I\'ll protect the town!',
+            effects: { unlockQuest: 'first_defense', addGold: 25 }
           }
         ]
       }
@@ -125,7 +125,7 @@ export const chapters: Chapter[] = [
       {
         id: 'first_defense',
         name: 'First Defense',
-        description: 'Defeat 10 monsters to prove your worth to the town.',
+        description: 'Defeat 10 monsters to protect the settlement and give the townspeople hope.',
         characterId: 'mayor_aldric',
         objectives: [
           {
@@ -133,6 +133,50 @@ export const chapters: Chapter[] = [
             type: 'kill_monster',
             description: 'Defeat 10 monsters',
             target: 10
+          }
+        ],
+        rewards: {
+          gold: 100,
+          xp: 50
+        },
+        onComplete: {
+          dialogue: [
+            {
+              characterId: 'mayor_aldric',
+              text: 'You did it! The monsters are retreating! You\'ve given us hope again!',
+              emotion: 'excited'
+            },
+            {
+              characterId: 'mayor_aldric',
+              text: 'But we\'re not safe yet. Our Town Hall was damaged in the attacks. We need to repair it to coordinate our defenses properly.',
+              emotion: 'worried'
+            },
+            {
+              characterId: 'mayor_aldric',
+              text: 'Can you help us gather the resources to repair the Town Hall? We need to upgrade it to restore our command center.',
+              emotion: 'hopeful',
+              choices: [
+                {
+                  text: 'I\'ll help repair the Town Hall.',
+                  effects: { unlockQuest: 'repair_town_hall' }
+                }
+              ]
+            }
+          ]
+        }
+      },
+      {
+        id: 'repair_town_hall',
+        name: 'Repair the Town Hall',
+        description: 'Upgrade the Town Hall to level 2 to restore the settlement\'s command center.',
+        characterId: 'mayor_aldric',
+        objectives: [
+          {
+            id: 'upgrade_town_hall',
+            type: 'upgrade_building',
+            description: 'Upgrade Town Hall to level 2',
+            target: 2,
+            buildingId: 'town_hall'
           }
         ],
         rewards: {
@@ -144,12 +188,17 @@ export const chapters: Chapter[] = [
           dialogue: [
             {
               characterId: 'mayor_aldric',
-              text: 'Incredible! You\'ve proven yourself a true defender of our town!',
+              text: 'The Town Hall is restored! You\'ve saved our settlement!',
               emotion: 'excited'
             },
             {
               characterId: 'mayor_aldric',
-              text: 'With your help, I believe we can expand and prosper. Let\'s upgrade the Town Hall!',
+              text: 'With a proper command center, we can start rebuilding. This is just the beginning of something great!',
+              emotion: 'happy'
+            },
+            {
+              characterId: 'mayor_aldric',
+              text: 'Thank you, hero. Our town has a future because of you.',
               emotion: 'happy'
             }
           ]

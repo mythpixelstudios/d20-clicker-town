@@ -82,6 +82,12 @@ function EquipmentCard({ item, onShowTooltip, onBreakdown, onShowComparison }: E
           {item.equipment.slot}
         </div>
       </div>
+      {/* Show quantity for stacked common items */}
+      {item.qty && item.qty > 1 && (
+        <div className="absolute bottom-1 left-2 bg-black/80 text-gold text-xs font-bold px-1.5 py-0.5 rounded border border-gold/30">
+          x{item.qty}
+        </div>
+      )}
       <button
         className="absolute top-1 right-1 w-5 h-5 bg-red-500/80 hover:bg-red-500 text-white rounded flex items-center justify-center text-sm font-bold transition-colors"
         onClick={handleBreakdown}
@@ -110,29 +116,51 @@ function MaterialCard({ item }: MaterialCardProps) {
 }
 
 export const InventoryPanel = () => {
-  const { inventory, breakdownEquipment } = useEconomy()
+  const { inventory, breakdownEquipment, maxInventorySize } = useEconomy()
   const { equipItem } = useChar()
   const [selectedEquipment, setSelectedEquipment] = useState<InventoryItem | null>(null)
   
   const handleEquipFromComparison = (equipment: Equipment) => {
     const unequippedItem = equipItem(equipment)
-    
-    // Remove equipped item from inventory
+
+    // Handle stacked items - only remove one from the stack
     const economy = useEconomy.getState()
-    const newInventory = economy.inventory.filter(invItem => invItem.equipment?.id !== equipment.id)
-    
+    const itemIndex = economy.inventory.findIndex(invItem => invItem.equipment?.id === equipment.id)
+
+    let newInventory = [...economy.inventory]
+
+    if (itemIndex !== -1) {
+      const item = newInventory[itemIndex]
+      const qty = item.qty || 1
+
+      if (qty > 1) {
+        // Decrement quantity
+        newInventory[itemIndex] = {
+          ...item,
+          qty: qty - 1
+        }
+      } else {
+        // Remove item completely
+        newInventory = newInventory.filter(invItem => invItem.equipment?.id !== equipment.id)
+      }
+    }
+
     // Add unequipped item back to inventory if there was one
     if (unequippedItem) {
-      newInventory.push({
+      // Use addInventory to properly handle stacking
+      economy.addInventory([{
         id: unequippedItem.id,
         label: unequippedItem.name,
         equipment: unequippedItem,
         isEquipment: true
-      })
+      }])
+      // Get the updated inventory after adding
+      newInventory = useEconomy.getState().inventory
+    } else {
+      // Update inventory only if we didn't add an unequipped item
+      useEconomy.setState({ inventory: newInventory })
     }
-    
-    // Update inventory
-    useEconomy.setState({ inventory: newInventory })
+
     setSelectedEquipment(null)
   }
   
@@ -178,7 +206,7 @@ export const InventoryPanel = () => {
       <div className="bg-panel border border-white/[0.06] rounded-xl p-4 shadow-card">
         <div className="flex justify-between items-center mb-4">
           <b className="text-text">Inventory</b>
-          <div className="text-muted text-sm">{inventory.length} items</div>
+          <div className="text-muted text-sm">{inventory.length}/{maxInventorySize} items</div>
         </div>
 
         {/* Equipment Section */}

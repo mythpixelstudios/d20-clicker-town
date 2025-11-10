@@ -48,35 +48,50 @@ export const InventoryPanel = () => {
 
   const handleEquip = (item: InventoryItem) => {
     if (!item.isEquipment || !item.equipment) return
-    
+
     const unequippedItem = equipItem(item.equipment)
-    
-    // Remove equipped item from inventory
+
+    // Handle stacked items - only remove one from the stack
     const economy = useEconomy.getState()
-    const newInventory = economy.inventory.filter(invItem => invItem.id !== item.id)
-    
+    const itemIndex = economy.inventory.findIndex(invItem => invItem.id === item.id)
+
+    let newInventory = [...economy.inventory]
+
+    if (itemIndex !== -1) {
+      const inventoryItem = newInventory[itemIndex]
+      const qty = inventoryItem.qty || 1
+
+      if (qty > 1) {
+        // Decrement quantity
+        newInventory[itemIndex] = {
+          ...inventoryItem,
+          qty: qty - 1
+        }
+      } else {
+        // Remove item completely
+        newInventory = newInventory.filter(invItem => invItem.id !== item.id)
+      }
+    }
+
     // Add unequipped item back to inventory if there was one
     if (unequippedItem) {
-      newInventory.push({
+      // Use addInventory to properly handle stacking
+      economy.addInventory([{
         id: unequippedItem.id,
         label: unequippedItem.name,
         equipment: unequippedItem,
         isEquipment: true
-      })
+      }])
+    } else {
+      // Update inventory only if we didn't add an unequipped item
+      useEconomy.setState({ inventory: newInventory })
     }
-    
-    economy.addInventory = (items) => {
-      useEconomy.setState({ inventory: [...newInventory, ...items] })
-    }
-    
-    // Just update the inventory directly
-    useEconomy.setState({ inventory: newInventory })
   }
   const gold = useEconomy((state) => state.gold)
+  const maxInventorySize = useEconomy((state) => state.maxInventorySize)
 
-  // Create inventory slots (40 slots total)
-  const maxSlots = 40
-  const slots = Array.from({ length: maxSlots }, (_, index) => {
+  // Create inventory slots
+  const slots = Array.from({ length: maxInventorySize }, (_, index) => {
     const item = inventory[index]
     return <InventorySlot key={index} item={item} />
   })
@@ -86,7 +101,7 @@ export const InventoryPanel = () => {
       <div className="text-gold font-bold mb-2">Money: {gold}</div>
       <div className="mb-3">
         <b className="text-text">Inventory</b>
-        <div className="text-muted text-sm">{inventory.length}/{maxSlots} items</div>
+        <div className="text-muted text-sm">{inventory.length}/{maxInventorySize} items</div>
       </div>
       <div className="flex flex-wrap gap-1">
         {slots}
