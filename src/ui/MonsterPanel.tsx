@@ -170,7 +170,7 @@ const MonsterPanel = () => {
         <div className="flex justify-between items-center">
           <div className="relative">
             <button
-              className="bg-transparent border-none text-text cursor-pointer text-sm px-2 py-1 rounded hover:bg-white/5 transition-colors"
+              className="bg-transparent border-none text-text cursor-pointer text-xl px-2 py-1 rounded hover:bg-white/5 transition-colors"
               onMouseEnter={() => setShowZoneTooltip(true)}
               onMouseLeave={() => setShowZoneTooltip(false)}
               onFocus={() => setShowZoneTooltip(true)}
@@ -216,10 +216,10 @@ const MonsterPanel = () => {
           </div>
         </div>
             <button
-              className="relative w-full rounded-xl p-6 mt-3 mb-3 cursor-pointer transition-all hover:border-white/20 active:scale-[0.98] min-h-[600px] flex flex-col"
+              className="relative w-full rounded-xl p-6 mt-3 mb-3 cursor-pointer transition-all hover:border-white/20 min-h-[600px] flex flex-col"
               style={currentZone.backgroundImage ? {
                 backgroundImage: `url(${currentZone.backgroundImage})`,
-                backgroundSize: '650px auto',
+                backgroundSize: `${isBoss ? '950px auto' : '800px auto'}`,
                 backgroundPosition: 'center',
                 backgroundRepeat: 'no-repeat'
               } : undefined}
@@ -232,9 +232,9 @@ const MonsterPanel = () => {
               aria-label="Attack monster"
             >
               {/* Top section with monster details */}
-              <div className="flex flex-col gap-2">
+              <div className="flex flex-col gap-2 bg-slate-800/50 rounded-lg p-3">
                 <div className="text-lg flex flex-row items-center justify-center gap-2">
-                  <span className="font-bold text-white drop-shadow-[0_2px_4px_rgba(0,0,0,0.8)]">{monsterName}</span>
+                  <span className="font-bold text-2xl text-red-400 drop-shadow-[0_2px_4px_rgba(0,0,0,0.8)]">{monsterName}</span>
                 </div>
                 <div className="text-xs text-white flex justify-center items-center gap-1 drop-shadow-[0_2px_4px_rgba(0,0,0,0.8)]">
                   <span className="text-sm">🛡️</span>
@@ -275,7 +275,7 @@ const MonsterPanel = () => {
                 <img
                   src={monsterImage}
                   alt={monsterName}
-                  className={`relative top-[27px] max-w-full h-auto object-contain max-h-[450px] pt-6 transition-all duration-150 ${isFlashing ? 'brightness-[2] saturate-0' : ''}`}
+                  className={`relative top-[27px] max-w-full h-auto object-contain ${isBoss ? 'max-h-[750px]' : 'max-h-[600px]'} pt-6 transition-all duration-150 ${isFlashing ? 'brightness-[2] saturate-0 animate-shake' : ''}`}
                   style={{ imageRendering: 'pixelated' }}
                 />
               </div>

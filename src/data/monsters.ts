@@ -199,7 +199,7 @@ const bossesByZone: BossesByZone = {
   1: { 
     name: "Forest Guardian", 
     hp: 500, 
-    image: "🌲", 
+    image:  "/src/images/monsters/forest-guardian.png", 
     description: "Ancient protector of the forest",
     armorClass: 12,
     vulnerabilities: ['fire', 'slashing'],

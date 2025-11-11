@@ -29,6 +29,7 @@ export default {
         'achievement-rotate': 'achievementRotate 3s ease-in-out infinite',
         'legendary-glow': 'legendaryGlow 3s ease-in-out infinite',
         'slide-in': 'slideIn 0.3s ease-out',
+        'shake': 'shake 0.15s ease-in-out',
       },
       keyframes: {
         floatUp: {
@@ -109,6 +110,11 @@ export default {
           '0%, 100%': { transform: 'rotate(0deg) scale(1)' },
           '25%': { transform: 'rotate(-10deg) scale(1.1)' },
           '75%': { transform: 'rotate(10deg) scale(1.1)' },
+        },
+        shake: {
+          '0%, 100%': { transform: 'translateX(0)' },
+          '25%': { transform: 'translateX(-4px) rotate(-2deg)' },
+          '75%': { transform: 'translateX(4px) rotate(2deg)' },
         },
       },
       boxShadow: {
