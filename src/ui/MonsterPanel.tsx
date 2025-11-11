@@ -11,29 +11,29 @@ import DamageNumberContainer, { type DamageNumber } from '@/ui/components/Damage
 import DPSPanel from '@/ui/components/DPSPanel'
 
 const MonsterPanel = () => {
-  const { 
-    monsterHP, 
+  const {
+    monsterHP,
     monsterMaxHP,
     monsterAC,
     monsterName,
     monsterImage,
-    isBoss, 
-    bossTimer, 
-    click, 
-    tryBoss, 
+    isBoss,
+    bossTimer,
+    click,
+    tryBoss,
     canTryBoss,
     onMonsterDeath,
     setDamageCallback,
     affixes
   } = useCombat()
-  
+
   const { currentZone: zone } = useZoneProgression()
   const [showZoneTooltip, setShowZoneTooltip] = useState(false)
   const [damageNumbers, setDamageNumbers] = useState<DamageNumber[]>([])
   const totalStats = useChar.getState().getTotalStats()
   const currentZone = getZone(zone || 1)
   const { getZoneLevel } = useZoneProgression()
-  
+
   // Add damage number when click happens
   const addDamageNumber = useCallback((damage: number, isCrit: boolean = false, isMiss: boolean = false) => {
     console.log('addDamageNumber called with:', { damage, isCrit, isMiss })
@@ -81,12 +81,12 @@ const MonsterPanel = () => {
     // Get building effects for auto-clicker
     const townBuildings = useTown.getState().buildings
     const buildingEffects = calculateBuildingEffects(townBuildings)
-    
+
     const attacksPerSecond = computeAutoAPS(totalStats, buildingEffects)
-    
+
     // Absolutely no auto-attacks if no auto-clicker buildings or attacksPerSecond is 0
     if (attacksPerSecond <= 0 || monsterHP <= 0) return
-    
+
     // Double-check that we actually have auto-clicker capability
     if (!buildingEffects.autoClicker || buildingEffects.autoClicker <= 0) return
 
@@ -98,21 +98,21 @@ const MonsterPanel = () => {
       // Get fresh building effects for damage calculation
       const currentTownBuildings = useTown.getState().buildings
       const currentBuildingEffects = calculateBuildingEffects(currentTownBuildings)
-      
+
       // Check if auto attack should miss due to monster affixes
       const currentMonster = useCombat.getState().monster
       if (currentMonster && shouldAutoAttackMiss(currentMonster)) {
         return // Auto attack misses
       }
-      
+
       const charLevel = useChar.getState().level
       const damage = computeAutoDamage(totalStats, currentBuildingEffects, charLevel)
-      
+
       // No damage if calculated damage is 0 or negative
       if (damage <= 0) return
-      
+
       const newHP = Math.max(0, currentHP - damage)
-      
+
       if (newHP === 0) {
         useCombat.getState().onMonsterDeath()
       } else {
@@ -132,7 +132,7 @@ const MonsterPanel = () => {
       if (currentTimer === null || currentTimer <= 0) return
 
       const newTimer = Math.max(0, currentTimer - 0.1)
-      
+
       if (newTimer <= 0 && useCombat.getState().monsterHP > 0) {
         // Boss fight failed - go back to regular monster
         const state = useCombat.getState()
@@ -210,65 +210,69 @@ const MonsterPanel = () => {
             </button>
           </div>
         </div>
+            <button
+              className="relative w-full bg-[#1a1f2a] rounded-xl p-6 mt-3 mb-3 cursor-pointer transition-all hover:border-white/20 hover:shadow-[0_4px_12px_rgba(0,0,0,0.3)] active:scale-[0.98] min-h-[600px] flex flex-col"
+              style={currentZone.backgroundImage ? {
+                backgroundImage: `url(${currentZone.backgroundImage})`,
+                backgroundSize: '650px auto',
+                backgroundPosition: 'center',
+                backgroundRepeat: 'no-repeat'
+              } : undefined}
+              onClick={() => {
+                console.log('Monster clicked!')
+                click()
+              }}
+              aria-label="Attack monster"
+            >
+              {/* Top section with monster details */}
+              <div className="flex flex-col gap-2">
+                <div className="text-lg flex flex-row items-center justify-center gap-2">
+                  <span className="font-bold text-white drop-shadow-[0_2px_4px_rgba(0,0,0,0.8)]">{monsterName}</span>
+                </div>
+                <div className="text-xs text-white flex justify-center items-center gap-1 drop-shadow-[0_2px_4px_rgba(0,0,0,0.8)]">
+                  <span className="text-sm">🛡️</span>
+                  <span>AC {monsterAC}</span>
+                </div>
+                {affixes && affixes.length > 0 && (
+                  <div className="flex justify-center gap-1 flex-wrap">
+                    {affixes.map(affix => (
+                      <span
+                        key={affix.id}
+                        className="inline-flex items-center gap-1 px-2 py-1 text-white rounded font-bold text-[11px] border border-white/20"
+                        style={{
+                          backgroundColor: affix.color,
+                          boxShadow: `0 2px 4px ${affix.color}66`
+                        }}
+                        title={affix.description}
+                      >
+                        <span className="text-sm">{affix.icon}</span>
+                        {affix.name}
+                      </span>
+                    ))}
+                  </div>
+                )}
+                <div className="text-white drop-shadow-[0_2px_4px_rgba(0,0,0,0.8)]">
+                  {Math.ceil(monsterHP)} / {Math.ceil(monsterMaxHP)} HP
+                </div>
+                {/* HP Bar */}
+                <div className="w-full h-2 bg-black/30 rounded-full overflow-hidden">
+                  <div
+                    className="h-full bg-gradient-to-r from-red-600 to-red-500 transition-all duration-300 rounded-full"
+                    style={{ width: healthPercent + '%' }}
+                  />
+                </div>
+              </div>
 
-        <button
-          className="relative w-full bg-[#1a1f2a] border-2 border-white/10 rounded-xl p-6 mt-3 mb-3 cursor-pointer transition-all hover:border-white/20 hover:shadow-[0_4px_12px_rgba(0,0,0,0.3)] active:scale-[0.98]"
-          onClick={() => {
-            console.log('Monster clicked!')
-            click()
-          }}
-          aria-label="Attack monster"
-        >
-          <div className="text-center">
-            <div className="text-lg flex items-center justify-center gap-2">
-              {monsterImage.startsWith('/') || monsterImage.startsWith('http') ? (
+              {/* Bottom section with monster image */}
+              <div className="flex-1 flex items-end justify-center mt-6">
                 <img
                   src={monsterImage}
                   alt={monsterName}
-                  className="w-12 h-12 object-contain"
+                  className="relative top-[27px] max-w-full h-auto object-contain max-h-[450px] pt-6"
                   style={{ imageRendering: 'pixelated' }}
                 />
-              ) : (
-                <span>{monsterImage}</span>
-              )}
-              <span>{monsterName}</span>
-            </div>
-            <div className="text-xs text-muted mt-1 flex justify-center items-center gap-1">
-              <span className="text-sm">🛡️</span>
-              <span>AC {monsterAC}</span>
-            </div>
-            {affixes && affixes.length > 0 && (
-              <div className="flex justify-center gap-1 mt-2 flex-wrap">
-                {affixes.map(affix => (
-                  <span
-                    key={affix.id}
-                    className="inline-flex items-center gap-1 px-2 py-1 text-white rounded font-bold text-[11px] border border-white/20"
-                    style={{
-                      backgroundColor: affix.color,
-                      boxShadow: `0 2px 4px ${affix.color}66`
-                    }}
-                    title={affix.description}
-                  >
-                    <span className="text-sm">{affix.icon}</span>
-                    {affix.name}
-                  </span>
-                ))}
               </div>
-            )}
-            <div className="mt-1.5">
-              {Math.ceil(monsterHP)} / {Math.ceil(monsterMaxHP)} HP
-            </div>
-          </div>
-          <div className="absolute left-3 right-3 bottom-3">
-            <div className="w-full h-2 bg-black/30 rounded-full overflow-hidden">
-              <div
-                className="h-full bg-gradient-to-r from-red-600 to-red-500 transition-all duration-300 rounded-full"
-                style={{ width: healthPercent + '%' }}
-              />
-            </div>
-          </div>
-        </button>
-
+            </button>
         {!isBoss && (
           <div className="mt-3">
             {canTryBoss ? (

@@ -5,6 +5,7 @@ export interface Zone {
   monstersToDefeat: number
   boss: string
   difficulty: number
+  backgroundImage?: string
   rewards: {
     goldMultiplier: number
     materials: string[]
@@ -24,6 +25,7 @@ export const zones: Zone[] = [
     monstersToDefeat: 10,
     boss: "Forest Guardian",
     difficulty: 1,
+    backgroundImage: "/src/images/backgrounds/monster-Plate-forest.png",
     rewards: {
       goldMultiplier: 1,
       materials: ["wood", "fiber", "leather"]
@@ -36,6 +38,7 @@ export const zones: Zone[] = [
     monstersToDefeat: 10,
     boss: "Shadow Wolf",
     difficulty: 1.5,
+    backgroundImage: "/src/images/backgrounds/monster-Plate-darkwoods.png",
     rewards: {
       goldMultiplier: 1.2,
       materials: ["wood", "fiber", "leather", "bone"]
@@ -48,6 +51,7 @@ export const zones: Zone[] = [
     monstersToDefeat: 10,
     boss: "Stone Golem",
     difficulty: 2,
+    backgroundImage: "/src/images/backgrounds/monster-Plate-mountain.png",
     rewards: {
       goldMultiplier: 1.5,
       materials: ["stone", "iron", "fiber", "copper"]
@@ -60,6 +64,7 @@ export const zones: Zone[] = [
     monstersToDefeat: 10,
     boss: "Crystal Spider",
     difficulty: 2.5,
+    backgroundImage: "/src/images/backgrounds/monster-Plate-caves.png",
     rewards: {
       goldMultiplier: 1.8,
       materials: ["crystal", "iron", "gemstone", "quartz"]
@@ -76,6 +81,7 @@ export const zones: Zone[] = [
     monstersToDefeat: 10,
     boss: "Flame Titan",
     difficulty: 3,
+    backgroundImage: "/src/images/backgrounds/monster-Plate-volcanic.png",
     rewards: {
       goldMultiplier: 2,
       materials: ["obsidian", "fire_crystal", "sulfur", "ash"]
@@ -92,6 +98,7 @@ export const zones: Zone[] = [
     monstersToDefeat: 10,
     boss: "Ice King",
     difficulty: 3.5,
+    backgroundImage: "/src/images/backgrounds/monster-Plate-tundra.png",
     rewards: {
       goldMultiplier: 2.3,
       materials: ["ice_crystal", "frozen_wood", "permafrost", "silver"]
@@ -108,6 +115,7 @@ export const zones: Zone[] = [
     monstersToDefeat: 10,
     boss: "Sand Wraith",
     difficulty: 4,
+    backgroundImage: "/src/images/backgrounds/monster-Plate-desert.png",
     rewards: {
       goldMultiplier: 2.7,
       materials: ["sand_glass", "ancient_stone", "gold_dust", "mithril_ore"]
@@ -124,6 +132,7 @@ export const zones: Zone[] = [
     monstersToDefeat: 10,
     boss: "Arcane Treant",
     difficulty: 4.5,
+    backgroundImage: "/src/images/backgrounds/monster-Plate-mystic.png",
     rewards: {
       goldMultiplier: 3,
       materials: ["magic_dust", "enchanted_bark", "moonstone", "adamantine_ore"]
@@ -140,6 +149,7 @@ export const zones: Zone[] = [
     monstersToDefeat: 10,
     boss: "Wind Drake",
     difficulty: 5,
+    backgroundImage: "/src/images/backgrounds/monster-Plate-sky.png",
     rewards: {
       goldMultiplier: 3.5,
       materials: ["wind_crystal", "cloud_essence", "dragon_scale", "platinum"]
@@ -156,6 +166,7 @@ export const zones: Zone[] = [
     monstersToDefeat: 10,
     boss: "Demon Lord",
     difficulty: 6,
+    backgroundImage: "/src/images/backgrounds/monster-Plate-demon.png",
     rewards: {
       goldMultiplier: 4,
       materials: ["soul_crystal", "demon_bone", "infernal_iron", "orichalcum"]
@@ -172,6 +183,7 @@ export const zones: Zone[] = [
     monstersToDefeat: 15,
     boss: "Void Emperor",
     difficulty: 10,
+    backgroundImage: "/src/images/backgrounds/monster-Plate-void.png",
     rewards: {
       goldMultiplier: 10,
       materials: [] // All void materials are NPC-only
