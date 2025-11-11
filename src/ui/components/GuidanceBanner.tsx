@@ -42,23 +42,27 @@ export default function GuidanceBanner() {
   
   // Track average kill time for high TTK detection
   useEffect(() => {
-    const lastKillCount = recentKills.length
-    if (killCount > lastKillCount) {
-      const now = Date.now()
-      const newKills = [...recentKills, now].slice(-5) // Keep last 5 kills
-      setRecentKills(newKills)
-      
-      // Calculate average time between kills
-      if (newKills.length >= 3) {
-        const timeDiffs = []
-        for (let i = 1; i < newKills.length; i++) {
-          timeDiffs.push((newKills[i] - newKills[i - 1]) / 1000) // seconds
+    setRecentKills(prev => {
+      const lastKillCount = prev.length
+      if (killCount > lastKillCount) {
+        const now = Date.now()
+        const newKills = [...prev, now].slice(-5) // Keep last 5 kills
+
+        // Calculate average time between kills
+        if (newKills.length >= 3) {
+          const timeDiffs = []
+          for (let i = 1; i < newKills.length; i++) {
+            timeDiffs.push((newKills[i] - newKills[i - 1]) / 1000) // seconds
+          }
+          const avg = timeDiffs.reduce((a, b) => a + b, 0) / timeDiffs.length
+          setAvgKillTime(avg)
         }
-        const avg = timeDiffs.reduce((a, b) => a + b, 0) / timeDiffs.length
-        setAvgKillTime(avg)
+
+        return newKills
       }
-    }
-  }, [killCount, recentKills])
+      return prev
+    })
+  }, [killCount])
   
   // Define guidance messages
   const guidanceMessages: GuidanceMessage[] = [

@@ -149,20 +149,11 @@ export default function StartScreen({ onStartAdventure }: StartScreenProps) {
   return (
     <div className="fixed inset-0 bg-gradient-to-b from-bg via-panel to-black overflow-hidden">
       <div className="relative h-full flex flex-col items-center justify-center">
-        {/* Knight silhouette and campfire scene */}
-        <div className="absolute inset-0 flex items-center justify-center opacity-20">
-          <div className="relative">
-            <div className="absolute bottom-0 left-1/2 -translate-x-1/2">
-              <div className="text-6xl animate-pulse">🔥</div>
-              <div className="absolute inset-0 bg-orange-500/30 rounded-full blur-3xl"></div>
-            </div>
-            <div className="relative mt-20">
-              <div className="text-8xl">⚔️</div>
-              <div className="absolute bottom-0 left-1/2 -translate-x-1/2 w-20 h-4 bg-black/50 rounded-full blur-md"></div>
-            </div>
-            <div className="absolute top-0 left-0 right-0 text-4xl text-center animate-pulse">✨ ⭐ ✨</div>
-          </div>
-        </div>
+        {/* Background image */}
+        <div
+          className="absolute inset-0 bg-cover bg-center bg-no-repeat opacity-40"
+          style={{ backgroundImage: `url('/src/images/backgrounds/intro-background.png')` }}
+        />
 
         {/* Title */}
         <div className="relative z-10 text-center mb-12">

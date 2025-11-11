@@ -397,9 +397,6 @@ store.discoverRelic('your_relic_id')
 
 // Equip it
 store.equipRelic('your_relic_id')
-
-// Check stats
-console.log(store.getTotalStats())
 ```
 
 ### Test Events
@@ -408,9 +405,6 @@ const store = window.eventStore.getState()
 
 // Force spawn check (may need multiple tries)
 store.checkForEventSpawns()
-
-// Check active event
-console.log(store.activeEvent)
 
 // Interact with event
 store.interactWithEvent()
@@ -430,9 +424,6 @@ const npcId = Object.keys(tavernStore.npcs)[0]
 // Start expedition
 expStore.startExpedition('your_expedition_id', npcId)
 
-// Check progress
-console.log(expStore.activeExpeditions)
-
 // Force complete (for testing)
 const activeId = Object.keys(expStore.activeExpeditions)[0]
 expStore.completeExpedition(activeId)
@@ -442,12 +433,6 @@ expStore.completeExpedition(activeId)
 ```typescript
 // Import functions
 const { getCurrentSeason, getSeasonalItemsBySeason } = await import('./src/data/seasonal')
-
-// Check current season
-console.log(getCurrentSeason())
-
-// Get items for season
-console.log(getSeasonalItemsBySeason('winter_frost'))
 ```
 
 ---

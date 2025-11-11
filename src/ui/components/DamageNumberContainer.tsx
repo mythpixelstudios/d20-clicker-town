@@ -1,4 +1,4 @@
-import { useEffect, useRef } from 'react'
+import { useEffect, useState } from 'react'
 
 export interface DamageNumber {
   id: string
@@ -15,109 +15,54 @@ interface DamageNumberContainerProps {
   readonly onRemoveDamageNumber: (id: string) => void
 }
 
-// Object pool for damage numbers
-class DamageNumberPool {
-  private pool: HTMLDivElement[] = []
-  private readonly maxPoolSize = 20
-  private container: HTMLDivElement | null = null
-  
-  setContainer(container: HTMLDivElement) {
-    this.container = container
-  }
-  
-  acquire(): HTMLDivElement {
-    let element = this.pool.pop()
-    
-    if (!element && this.container) {
-      element = document.createElement('div')
-      element.className = 'absolute pointer-events-none z-[1000] transition-all duration-200 ease-out'
-      this.container.appendChild(element)
-    }
-    
-    return element || document.createElement('div')
-  }
-  
-  release(element: HTMLDivElement) {
-    if (this.pool.length < this.maxPoolSize) {
-      element.style.display = 'none'
-      this.pool.push(element)
-    } else if (element.parentNode) {
-      element.parentNode.removeChild(element)
-    }
-  }
-  
-  clear() {
-    this.pool.forEach(element => {
-      if (element.parentNode) {
-        element.parentNode.removeChild(element)
-      }
-    })
-    this.pool = []
-  }
+interface AnimatedDamageNumber extends DamageNumber {
+  isAnimating: boolean
 }
 
-const damagePool = new DamageNumberPool()
-
 export default function DamageNumberContainer({ damageNumbers, onRemoveDamageNumber }: DamageNumberContainerProps) {
-  const containerRef = useRef<HTMLDivElement>(null)
-  const activeElementsRef = useRef<Map<string, HTMLDivElement>>(new Map())
-  
-  // Initialize pool with container
-  useEffect(() => {
-    if (containerRef.current) {
-      damagePool.setContainer(containerRef.current)
-    }
-    
-    return () => {
-      // Cleanup on unmount
-      damagePool.clear()
-      activeElementsRef.current.clear()
-    }
-  }, [])
-  
-  // Manage damage numbers using pooled elements
-  useEffect(() => {
-    const currentIds = new Set(damageNumbers.map(dn => dn.id))
-    const timers: number[] = []
+  const [animatedNumbers, setAnimatedNumbers] = useState<AnimatedDamageNumber[]>([])
 
-    // Remove old elements
-    activeElementsRef.current.forEach((element, id) => {
-      if (!currentIds.has(id)) {
-        damagePool.release(element)
-        activeElementsRef.current.delete(id)
+  // When new damage numbers arrive, add them to animated list
+  useEffect(() => {
+    damageNumbers.forEach(damageNumber => {
+      // Check if this damage number is already being animated
+      const exists = animatedNumbers.find(an => an.id === damageNumber.id)
+      if (!exists) {
+        // Add new damage number
+        setAnimatedNumbers(prev => [...prev, { ...damageNumber, isAnimating: false }])
+
+        // Start animation after a tiny delay
+        setTimeout(() => {
+          setAnimatedNumbers(prev =>
+            prev.map(an => an.id === damageNumber.id ? { ...an, isAnimating: true } : an)
+          )
+        }, 10)
+
+        // Fade out
+        setTimeout(() => {
+          setAnimatedNumbers(prev =>
+            prev.map(an => an.id === damageNumber.id ? { ...an, isAnimating: false } : an)
+          )
+        }, 600)
+
+        // Remove from our local state and notify parent
+        setTimeout(() => {
+          setAnimatedNumbers(prev => prev.filter(an => an.id !== damageNumber.id))
+          onRemoveDamageNumber(damageNumber.id)
+        }, 1000)
       }
     })
+  }, [damageNumbers, onRemoveDamageNumber])
 
-    // Add or update elements
-    damageNumbers.forEach(damageNumber => {
-      const isNewElement = !activeElementsRef.current.has(damageNumber.id)
-      let element = activeElementsRef.current.get(damageNumber.id)
+  // Clean up when damage numbers are removed from parent
+  useEffect(() => {
+    const currentIds = new Set(damageNumbers.map(dn => dn.id))
+    setAnimatedNumbers(prev => prev.filter(an => currentIds.has(an.id)))
+  }, [damageNumbers])
 
-      if (!element) {
-        element = damagePool.acquire()
-        activeElementsRef.current.set(damageNumber.id, element)
-      }
-
-      // Only schedule removal for new elements
-      if (isNewElement) {
-        // Schedule removal with simpler structure
-        const fadeTimer = window.setTimeout(() => {
-          const el = activeElementsRef.current.get(damageNumber.id)
-          if (el) {
-            el.style.opacity = '0'
-            el.style.transform = 'translateY(-100px)'
-          }
-        }, 800)
-
-        const removeTimer = window.setTimeout(() => {
-          onRemoveDamageNumber(damageNumber.id)
-        }, 1200)
-
-        timers.push(fadeTimer, removeTimer)
-      }
-      
-      // Only update and animate new elements
-      if (isNewElement) {
+  return (
+    <div className="relative pointer-events-none">
+      {animatedNumbers.map(damageNumber => {
         // Determine color and text
         let color: string
         let text: string
@@ -135,48 +80,25 @@ export default function DamageNumberContainer({ damageNumbers, onRemoveDamageNum
           text = `${Math.ceil(damageNumber.damage)} dmg`
         }
 
-        // Update element
-        element.style.display = 'block'
-        element.style.left = '360px'
-        element.style.top = '150px'
-        element.style.position = 'absolute'
-        element.style.pointerEvents = 'none'
-        element.style.zIndex = '1000'
-        element.style.fontSize = damageNumber.isCrit ? '24px' : '18px'
-        element.style.fontWeight = damageNumber.isCrit || damageNumber.isMiss ? 'bold' : 'normal'
-        element.style.color = color
-        element.style.textShadow = '1px 1px 2px rgba(0,0,0,0.8)'
-        element.style.transition = 'all 0.6s ease-out'
-        element.textContent = text
-        element.className = `absolute pointer-events-none z-[1000] ${damageNumber.isCrit ? 'crit' : damageNumber.isMiss ? 'miss' : 'normal'}`
-
-        // Reset transform and opacity for new animation
-        element.style.transform = 'translateY(0px)'
-        element.style.opacity = '0'
-
-        // Trigger animation
-        requestAnimationFrame(() => {
-          requestAnimationFrame(() => {
-            if (element) {
-              element.style.transform = 'translateY(-80px)'
-              element.style.opacity = '1'
-            }
-          })
-        })
-      }
-    })
-    
-    return () => {
-      timers.forEach(timer => clearTimeout(timer))
-    }
-  }, [damageNumbers, onRemoveDamageNumber])
-  
-  return (
-    <div
-      ref={containerRef}
-      className="relative pointer-events-none"
-    >
-      {/* Container for pooled elements */}
+        return (
+          <div
+            key={damageNumber.id}
+            className="absolute pointer-events-none z-[1000] transition-all duration-700 ease-out"
+            style={{
+              left: '48%',
+              top: '400px',
+              fontSize: damageNumber.isCrit ? '28px' : '20px',
+              fontWeight: damageNumber.isCrit || damageNumber.isMiss ? 'bold' : 'normal',
+              color: color,
+              textShadow: '2px 2px 4px rgba(0,0,0,0.9)',
+              transform: damageNumber.isAnimating ? 'translateY(-80px)' : 'translateY(20px)',
+              opacity: damageNumber.isAnimating ? 1 : 0,
+            }}
+          >
+            {text}
+          </div>
+        )
+      })}
     </div>
   )
 }

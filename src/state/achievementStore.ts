@@ -18,7 +18,7 @@ export interface Achievement {
 }
 
 export interface AchievementReward {
-  type: 'gold' | 'xp' | 'stat_points' | 'items'
+  type: 'gold' | 'xp' | 'items'
   amount: number
   description: string
 }
@@ -53,7 +53,6 @@ export const ACHIEVEMENTS: Achievement[] = [
     condition: () => {
       const stats = useChar.getState().stats
       const hasStats = stats.str > 0 || stats.dex > 0 || stats.con > 0 || stats.int > 0 || stats.wis > 0
-      console.log('First stat achievement check:', { stats, hasStats })
       return hasStats
     },
     reward: { type: 'gold', amount: 10, description: '+10 Gold' }
@@ -83,7 +82,7 @@ export const ACHIEVEMENTS: Achievement[] = [
     tier: 'silver',
     category: 'progression',
     condition: () => (useZoneProgression.getState().currentZone || 1) >= 3,
-    reward: { type: 'stat_points', amount: 1, description: '+1 Stat Point' }
+    reward: { type: 'gold', amount: 100, description: '+100 Gold' }
   },
   {
     id: 'upgrade_building',
@@ -122,7 +121,7 @@ export const ACHIEVEMENTS: Achievement[] = [
     tier: 'bronze',
     category: 'progression',
     condition: () => useChar.getState().level >= 2,
-    reward: { type: 'stat_points', amount: 1, description: '+1 Stat Point' }
+    reward: { type: 'xp', amount: 50, description: '+50 XP' }
   },
   {
     id: 'gold_hoarder',
@@ -158,7 +157,7 @@ export const ACHIEVEMENTS: Achievement[] = [
     tier: 'gold',
     category: 'progression',
     condition: () => (useZoneProgression.getState().currentZone || 1) >= 6,
-    reward: { type: 'stat_points', amount: 2, description: '+2 Stat Points' }
+    reward: { type: 'xp', amount: 200, description: '+200 XP' }
   },
   {
     id: 'level_5',
@@ -199,10 +198,10 @@ export const ACHIEVEMENTS: Achievement[] = [
     category: 'general',
     condition: () => {
       const equipped = useChar.getState().equipped
-      return !!(equipped.weapon && equipped.helmet && equipped.chest && 
+      return !!(equipped.weapon && equipped.helmet && equipped.chest &&
                 equipped.legs && equipped.boots && equipped.gloves)
     },
-    reward: { type: 'stat_points', amount: 2, description: '+2 Stat Points' }
+    reward: { type: 'gold', amount: 300, description: '+300 Gold' }
   },
   {
     id: 'town_builder',
@@ -292,10 +291,6 @@ export const useAchievements = create<AchievementState>()(
             break
           case 'xp':
             useChar.getState().addXP(achievement.reward.amount)
-            break
-          case 'stat_points':
-            // This would need to be added to charStore if not already present
-            console.log(`Would grant ${achievement.reward.amount} stat points`)
             break
         }
         

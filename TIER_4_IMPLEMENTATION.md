@@ -287,7 +287,6 @@ window.expeditionStore.getState().startExpedition('scout_forest', npcId)
 
 // Check current season
 const { getCurrentSeason } = await import('./src/data/seasonal')
-console.log(getCurrentSeason())
 ```
 
 ## Stats and Numbers

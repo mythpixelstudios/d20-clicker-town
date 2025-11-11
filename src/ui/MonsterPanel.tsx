@@ -30,6 +30,7 @@ const MonsterPanel = () => {
   const { currentZone: zone } = useZoneProgression()
   const [showZoneTooltip, setShowZoneTooltip] = useState(false)
   const [damageNumbers, setDamageNumbers] = useState<DamageNumber[]>([])
+  const [isFlashing, setIsFlashing] = useState(false)
   const totalStats = useChar.getState().getTotalStats()
   const currentZone = getZone(zone || 1)
   const { getZoneLevel } = useZoneProgression()
@@ -110,6 +111,10 @@ const MonsterPanel = () => {
 
       // No damage if calculated damage is 0 or negative
       if (damage <= 0) return
+
+      // Trigger flash effect for auto-attack
+      setIsFlashing(true)
+      setTimeout(() => setIsFlashing(false), 150)
 
       const newHP = Math.max(0, currentHP - damage)
 
@@ -211,7 +216,7 @@ const MonsterPanel = () => {
           </div>
         </div>
             <button
-              className="relative w-full bg-[#1a1f2a] rounded-xl p-6 mt-3 mb-3 cursor-pointer transition-all hover:border-white/20 hover:shadow-[0_4px_12px_rgba(0,0,0,0.3)] active:scale-[0.98] min-h-[600px] flex flex-col"
+              className="relative w-full rounded-xl p-6 mt-3 mb-3 cursor-pointer transition-all hover:border-white/20 active:scale-[0.98] min-h-[600px] flex flex-col"
               style={currentZone.backgroundImage ? {
                 backgroundImage: `url(${currentZone.backgroundImage})`,
                 backgroundSize: '650px auto',
@@ -220,6 +225,8 @@ const MonsterPanel = () => {
               } : undefined}
               onClick={() => {
                 console.log('Monster clicked!')
+                setIsFlashing(true)
+                setTimeout(() => setIsFlashing(false), 150)
                 click()
               }}
               aria-label="Attack monster"
@@ -268,7 +275,7 @@ const MonsterPanel = () => {
                 <img
                   src={monsterImage}
                   alt={monsterName}
-                  className="relative top-[27px] max-w-full h-auto object-contain max-h-[450px] pt-6"
+                  className={`relative top-[27px] max-w-full h-auto object-contain max-h-[450px] pt-6 transition-all duration-150 ${isFlashing ? 'brightness-[2] saturate-0' : ''}`}
                   style={{ imageRendering: 'pixelated' }}
                 />
               </div>
@@ -277,7 +284,7 @@ const MonsterPanel = () => {
           <div className="mt-3">
             {canTryBoss ? (
               <button
-                className="w-full bg-gradient-to-r from-purple-600 to-purple-700 text-white border-none rounded-lg px-6 py-3 font-bold text-base cursor-pointer transition-all hover:from-purple-500 hover:to-purple-600 hover:shadow-[0_4px_12px_rgba(168,85,247,0.4)] active:scale-[0.98]"
+                className="w-full bg-slate-600 bg-gradient-to-r from-purple-600 to-purple-700 text-white border-none rounded-lg px-6 py-3 font-bold text-base cursor-pointer transition-all hover:from-purple-500 hover:to-purple-600 hover:shadow-[0_4px_12px_rgba(168,85,247,0.4)] active:scale-[0.98]"
                 onClick={tryBoss}
               >
                 Fight Boss
