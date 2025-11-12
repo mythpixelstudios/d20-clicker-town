@@ -55,14 +55,8 @@ export default function App(){
       // Start analytics session
       startSession()
 
-      // Initialize story - start Chapter 1 if not already started
-      const story = useStory.getState()
-      if (story.completedChapters.length === 0 && !story.activeChapter) {
-        // Delay story start slightly to let game initialize
-        setTimeout(() => {
-          story.startChapter('chapter_1')
-        }, 2000)
-      }
+      // Note: For new games, the Mayor intro is triggered in handleStartAdventure
+      // This useEffect only handles continuing games
     }
   }, [isGameInitialized, startSession])
   
@@ -126,6 +120,13 @@ export default function App(){
       // Update character stats with rolled values
       const charState = useChar.getState()
       charState.setRolledStats(stats)
+
+      // This is a new game - trigger Mayor introduction after game initializes
+      // We'll use a flag to ensure the intro plays
+      setTimeout(() => {
+        const story = useStory.getState()
+        story.startChapter('chapter_1')
+      }, 2500) // Slightly longer delay to let everything initialize
     }
     setShowStartScreen(false)
     setIsGameInitialized(true)

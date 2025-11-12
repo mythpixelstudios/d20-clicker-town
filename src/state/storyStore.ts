@@ -117,6 +117,16 @@ export const useStory = create<StoryState>()(
       },
       
       startDialogue: (dialogue: DialogueLine[], context?: { chapterId?: string; questId?: string; buildingId?: string }) => {
+        // Track character meetings when dialogue starts
+        if (dialogue.length > 0 && dialogue[0].characterId) {
+          const character = getCharacter(dialogue[0].characterId)
+          if (character) {
+            import('./characterCompendiumStore').then(({ useCharacterCompendium }) => {
+              useCharacterCompendium.getState().recordCharacterMeeting(character)
+            })
+          }
+        }
+
         set({
           activeDialogue: {
             chapterId: context?.chapterId,

@@ -1,8 +1,10 @@
 import { useState } from 'react'
 import AchievementPanel from '@/ui/AchievementPanel'
 import DailyQuestsPanel from '@/ui/DailyQuestsPanel'
+import StoryQuestsPanel from '@/ui/StoryQuestsPanel'
 import { useAchievements } from '@/state/achievementStore'
 import { useDailyQuests, type DailyQuest } from '@/state/dailyQuestStore'
+import { useStory } from '@/state/storyStore'
 
 interface GoalsTabProps {
   id: string
@@ -13,14 +15,27 @@ interface GoalsTabProps {
 }
 
 export default function GoalsPanel() {
-  const [activeSubTab, setActiveSubTab] = useState('achievements')
+  const [activeSubTab, setActiveSubTab] = useState('story-quests')
   const { getUnclaimedRewards } = useAchievements()
   const { quests } = useDailyQuests()
-  
+  const { activeStoryQuests } = useStory()
+
   const unclaimedAchievements = getUnclaimedRewards().length
   const completedQuests = quests.filter((q: DailyQuest) => q.completed && !q.claimed).length
 
+  // Check if any story quests are ready to complete
+  const readyToCompleteStoryQuests = activeStoryQuests.filter(quest => {
+    return quest.objectives.every(obj => (obj.current || 0) >= obj.target)
+  }).length
+
   const subTabs: GoalsTabProps[] = [
+    {
+      id: 'story-quests',
+      label: 'Story Quests',
+      isUnlocked: () => true,
+      hasAlert: readyToCompleteStoryQuests > 0,
+      content: <StoryQuestsPanel />
+    },
     {
       id: 'achievements',
       label: 'Achievements',

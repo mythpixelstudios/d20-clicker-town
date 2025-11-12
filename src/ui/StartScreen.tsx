@@ -41,7 +41,7 @@ export default function StartScreen({ onStartAdventure }: StartScreenProps) {
     // Clear all localStorage keys for the game
     const gameKeys = [
       'char-v4',  // Updated version
-      'econ-v2', 
+      'econ-v2',
       'town-v3',
       'zone-progression-store',
       'combat-v3',
@@ -53,17 +53,18 @@ export default function StartScreen({ onStartAdventure }: StartScreenProps) {
       'analytics-store',
       'meta-store',
       'monster-compendium-store',
+      'story-progress', // Story/chapter progression
       'player-name',
       'audio-settings',
       'clicker-town-expeditions',
       'clicker-town-events',
       'clicker-town-relics'
     ]
-    
+
     for (const key of gameKeys) {
       localStorage.removeItem(key)
     }
-    
+
     // Force reload the page to reinitialize all stores with default state
     window.location.reload()
   }

@@ -76,7 +76,7 @@ export default function DamageNumberContainer({ damageNumbers, onRemoveDamageNum
           color = '#ff6b35'
           text = `${Math.ceil(damageNumber.damage)} dmg! 🎯`
         } else {
-          color = '#fff'
+          color = '#FFDE21'
           text = `${Math.ceil(damageNumber.damage)} dmg`
         }
 
